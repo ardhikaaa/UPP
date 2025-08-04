@@ -1,0 +1,103 @@
+/* Sidebar Responsive Styles */
+
+/* Ensure sidebar is properly positioned on all screen sizes */
+#sidebar {
+    will-change: transform;
+}
+
+/* Smooth transitions for all interactive elements */
+#sidebar * {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 1023px) {
+    #sidebar {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* Prevent body scroll when sidebar is open */
+    body.sidebar-open {
+        overflow: hidden;
+    }
+}
+
+/* Tablet styles */
+@media (min-width: 768px) and (max-width: 1023px) {
+    #sidebar {
+        width: 280px;
+    }
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+    #sidebar {
+        position: static !important;
+        transform: none !important;
+    }
+    
+    /* Hide mobile elements on desktop */
+    #sidebar-toggle,
+    #sidebar-close,
+    #sidebar-overlay {
+        display: none !important;
+    }
+}
+
+/* Animation for menu items */
+#sidebar nav a {
+    position: relative;
+    overflow: hidden;
+}
+
+#sidebar nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+#sidebar nav a:hover::before {
+    left: 100%;
+}
+
+/* Focus styles for accessibility */
+#sidebar-toggle:focus,
+#sidebar-close:focus,
+#sidebar nav a:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* Loading state */
+#sidebar.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Custom scrollbar for sidebar content */
+#sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+#sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+#sidebar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+} 
