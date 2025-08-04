@@ -16,43 +16,62 @@
 
         <p class="text-center text-sm text-gray-700">Or</p>
 
-        {{-- Login form --}}
-        <form method="POST" action="{{ route('login') }}">
+        {{-- Register form --}}
+        <form method="POST" action="{{ route('register') }}">
             @csrf
 
             {{-- Full Name --}}
             <div class="mb-4">
                 <label class="block text-sm text-gray-800">Full Name</label>
-                <input type="nama" name="nama" placeholder="Doni Sulaiman" required
-                       class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                <input type="text" name="name" value="{{ old('name') }}" placeholder="Doni Sulaiman" required
+                       class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror"/>
+                @error('name')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Email --}}
             <div class="mb-4">
                 <label class="block text-sm text-gray-800">Email Address</label>
-                <input type="email" name="email" placeholder="example@gmail.com" required
-                       class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                <input type="email" name="email" value="{{ old('email') }}" placeholder="example@gmail.com" required
+                       class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror"/>
+                @error('email')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
-             {{-- Username --}}
+            {{-- Username --}}
             <div class="mb-4">
                 <label class="block text-sm text-gray-800">Username</label>
-                <input type="nama" name="nama" placeholder="Doni12643" required
-                       class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                <input type="text" name="username" value="{{ old('username') }}" placeholder="Doni12643" required
+                       class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('username') border-red-500 @enderror"/>
+                @error('username')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- Password --}}
             <div class="mb-4">
                 <label class="block text-sm text-gray-800">Password</label>
                 <input type="password" name="password" placeholder="********" required
+                       class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('password') border-red-500 @enderror"/>
+                @error('password')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            {{-- Confirm Password --}}
+            <div class="mb-4">
+                <label class="block text-sm text-gray-800">Confirm Password</label>
+                <input type="password" name="password_confirmation" placeholder="********" required
                        class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
             </div>
 
-            {{-- Remember + Forgot --}}
-            <div class="flex justify-between items-center text-sm mb-6">
-                <label class="flex items-center gap-2">
-                    <input type="checkbox" name="remember" class="form-checkbox mb-4">
-                    By creating an account you agree to the terms of use and our privacy policy.
+            {{-- Terms --}}
+            <div class="flex items-start gap-2 text-sm mb-6">
+                <input type="checkbox" name="terms" required class="mt-1 form-checkbox">
+                <label class="text-gray-700">
+                    By creating an account you agree to the <a href="#" class="text-blue-600 hover:underline">terms of use</a> and our <a href="#" class="text-blue-600 hover:underline">privacy policy</a>.
                 </label>
             </div>
 
@@ -63,7 +82,7 @@
             </button>
         </form>
 
-        {{-- Register link --}}
+        {{-- Login link --}}
         <p class="text-center text-sm text-gray-600 mt-6">
             Already have an account? <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">Log In</a>
         </p>
