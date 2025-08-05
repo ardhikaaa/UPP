@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\halaman_obatController;
 use App\Http\Controllers\GuruController;
-use App\Http\Controllers\ObatController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Support\Facades\Route;
@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::resource('obat', halaman_obatController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -31,3 +33,4 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
