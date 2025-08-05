@@ -3,6 +3,7 @@
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UnitController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -15,6 +16,9 @@ Route::get('/dashboard', function () {
 
 
 Route::resource('guru', GuruController::class)->middleware(['auth', 'verified']);
+
+Route::resource('unit', UnitController::class)->middleware(['auth', 'verified']);
+
 
 Route::get('/kunjungan_uks', function () {
     return view('kunjungan_uks');
