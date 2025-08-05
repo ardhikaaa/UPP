@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CRUD Status Siswa</title>
@@ -41,8 +40,7 @@
   <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
   <div class="bg-white p-8 rounded-xl w-[90%] max-w-3xl shadow-xl">
       <h2 id="modalTitle" class="text-xl font-bold mb-4">Add Siswa</h2>
-      <form id="form" method="POST" action="{{ route('kunjungan-uks.index') }}">
-  @csrf
+      <form id="form">
         <div class="grid grid-cols-2 gap-4 mb-4">
           <input type="text" id="nama" placeholder="Nama Siswa" class="border p-2 rounded" required>
           <input type="text" id="kelas" placeholder="Kelas" class="border p-2 rounded" required>
@@ -77,7 +75,7 @@
         const statusColor =
           data.status === 'Kembali ke Kelas' ? 'green' :
           data.status === 'Istirahat di UKS' ? 'yellow' : 'red';
-        tbody.innerHTML += `
+        tbody.innerHTML += 
           <tr class="border-b hover:bg-gray-100 text-center">
             <td class="py-2 px-4 border">${data.nama}</td>
             <td class="py-2 px-4 border">${data.kelas}</td>
@@ -96,7 +94,7 @@
               </div>
             </td>
           </tr>
-        `;
+        ;
       });
     }
 
@@ -136,41 +134,26 @@
     }
 
     document.getElementById('form').addEventListener('submit', function (e) {
-  e.preventDefault();
-
-  const formData = {
-    nama: document.getElementById('nama').value,
-    kelas: document.getElementById('kelas').value,
-    diagnosa: document.getElementById('diagnosa').value,
-    obat: document.getElementById('obat').value,
-    tanggal: document.getElementById('tanggal').value,
-    guru: document.getElementById('guru').value,
-    jumlah_obat: document.getElementById('jumlah_obat').value,
-    status: document.getElementById('status').value,
-  };
-
-  fetch("/kunjungan-uks", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-    },
-    body: JSON.stringify(formData),
-  })
-  .then((res) => {
-    if (!res.ok) throw new Error("Gagal menyimpan");
-    return res.json();
-  })
-  .then((data) => {
-    alert("Data berhasil disimpan!");
-    closeModal();
-    location.reload(); // Atau bisa fetch ulang data untuk tampilkan tanpa reload
-  })
-  .catch((error) => {
-    alert("Terjadi kesalahan: " + error.message);
-  });
-});
-
+      e.preventDefault();
+      const newData = {
+        nama: document.getElementById('nama').value,
+        kelas: document.getElementById('kelas').value,
+        diagnosa: document.getElementById('diagnosa').value,
+        obat: document.getElementById('obat').value,
+        tanggal: document.getElementById('tanggal').value,
+        guru: document.getElementById('guru').value,
+        jumlah: document.getElementById('jumlah').value,
+        status: document.getElementById('status').value,
+      };
+      if (editIndex === null) {
+        siswaData.push(newData);
+      } else {
+        siswaData[editIndex] = newData;
+        editIndex = null;
+      }
+      closeModal();
+      renderTable();
+    });
 
     // Inisialisasi awal
     renderTable();
