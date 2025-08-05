@@ -63,6 +63,14 @@
         <span class="hidden sm:inline">Data Siswa</span>
         <span class="sm:hidden">Siswa</span>
       </a>
+      <a href="/unit" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+    {{ request()->is('unit') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
+        <svg class="w-5 h-5 {{ request()->is('unit*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+        </svg>
+        <span class="hidden sm:inline">Data Unit</span>
+        <span class="sm:hidden">Unit</span>
+      </a>
     </nav>
   </div>
 

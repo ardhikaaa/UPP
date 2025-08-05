@@ -1,15 +1,15 @@
 <x-guest-layout>
-    <div class="w-full max-w-sm mx-auto bg-white/30 backdrop-blur-sm rounded-2xl shadow-lg px-8 py-12 relative">
+    <div class="w-full max-w-sm mx-auto bg-white/30 backdrop-blur-sm rounded-2xl shadow-lg ml-6  px-8 py-12 relative">
         <img src="{{ asset('images/logo-uks.png') }}" alt="UKS Logo" class="w-16 mx-auto mb-2" />
 
         <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Log in</h2>
 
         {{-- Sosial login --}}
         <div class="flex justify-between gap-4 mb-4">
-            <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-black py-2 rounded-lg flex items-center justify-center gap-2">
+            <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-black py-2 rounded-lg flex items-center justify-center gap-2">
                 <i class="fab fa-google text-red-600"></i> Google
             </button>
-            <button class="flex-1 bg-gray-100 hover:bg-gray-200 text-black py-2 rounded-lg flex items-center justify-center gap-2">
+            <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-black py-2 rounded-lg flex items-center justify-center gap-2">
                 <i class="fab fa-facebook-f text-blue-600"></i> Facebook
             </button>
         </div>
