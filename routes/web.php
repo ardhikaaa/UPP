@@ -13,7 +13,12 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
 Route::resource('guru', GuruController::class)->middleware(['auth', 'verified']);
+
+Route::get('/kunjungan_uks', function () {
+    return view('kunjungan_uks');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
