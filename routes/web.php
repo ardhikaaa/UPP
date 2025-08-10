@@ -3,6 +3,7 @@
 use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\halaman_obatController;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\KelasController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Support\Facades\Route;
@@ -11,23 +12,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('obat', halaman_obatController::class);
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-
-Route::resource('siswa', SiswaController::class);
-
-Route::resource('guru', GuruController::class)->middleware(['auth', 'verified']);
-
-Route::resource('unit', UnitController::class)->middleware(['auth', 'verified']);
-
-
 Route::get('/kunjungan_uks', function () {
     return view('kunjungan_uks');
-});
+})->middleware(['auth', 'verified'])->name('kunjungan_uks');
+
+Route::resource('siswa', SiswaController::class)->middleware(['auth', 'verified']);
+Route::resource('guru', GuruController::class)->middleware(['auth', 'verified']);
+Route::resource('unit', UnitController::class)->middleware(['auth', 'verified']);
+Route::resource('kelas', KelasController::class)->middleware(['auth', 'verified']);
+Route::resource('obat', halaman_obatController::class)->middleware(['auth', 'verified']);
+// Route::get('/kunjungan_uks', function () {
+//     return view('kunjungan_uks');
+// });
 
 
 Route::middleware('auth')->group(function () {

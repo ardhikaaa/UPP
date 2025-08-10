@@ -15,7 +15,7 @@
   <!-- Top Logo + App Name -->
   <div>
     <div class="flex items-center justify-between mb-10">
-    <a href="/dashboard">
+    <a href="/kunjungan_uks">
       <div class="flex items-center space-x-3">
         <img src="assets/logo-uks.png" alt="Logo" class="w-15 h-10" />
         <h1 class="text-lg font-semibold">UPP</h1>
@@ -31,9 +31,9 @@
 
     <!-- Menu Items -->
     <nav class="flex flex-col gap-2">
-      <a href="/dashboard" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-    {{ request()->is('dashboard') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('dashboard*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+      <a href="/kunjungan_uks" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+    {{ request()->is('kunjungan_uks') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
+        <svg class="w-5 h-5 {{ request()->is('kunjungan_uks*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
           <path d="M3 3h14a1 1 0 011 1v3H2V4a1 1 0 011-1zM2 8h16v2H2V8zm0 4h16v2H2v-2zm0 4h16v1a1 1 0 01-1 1H3a1 1 0 01-1-1v-1z" />
         </svg>
         <span class="hidden sm:inline">Data Kunjungan UKS</span>
@@ -55,22 +55,57 @@
         <span class="hidden sm:inline">Data Guru</span>
         <span class="sm:hidden">Guru</span>
       </a>
-      <a href="/siswa" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-    {{ request()->is('siswa') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('siswa*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
-        </svg>
-        <span class="hidden sm:inline">Data Siswa</span>
-        <span class="sm:hidden">Siswa</span>
-      </a>
-      <a href="/unit" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-    {{ request()->is('unit') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('unit*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
-        </svg>
-        <span class="hidden sm:inline">Data Unit</span>
-        <span class="sm:hidden">Unit</span>
-      </a>
+
+      <!-- Dropdown Menu for Rombel, Siswa, Kelas, Unit -->
+      <div class="relative">
+        <button type="button" class="dropdown-toggle flex items-center justify-between w-full gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+          {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-blue-600 bg-blue-50' : 'text-gray-400 hover:text-blue-600 hover:bg-gray-50' }}"
+          onclick="toggleDropdown('master-data-dropdown')">
+          <div class="flex items-center gap-3">
+            <svg id="dropdown-icon" class="w-4 h-4 transition-transform {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-blue-600 rotate-180' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+          </svg>
+            <span class="hidden sm:inline">Data Siswa</span>
+            <span class="sm:hidden">Data</span>
+          </div>
+          <svg id="dropdown-icon" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+        
+          <div id="master-data-dropdown" 
+          class="dropdown-menu mt-1 ml-4 space-y-1 
+          {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? '' : 'hidden' }}">
+          <a href="/rombel" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+            {{ request()->is('rombel*') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('rombel*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+            </svg>
+            <span>Rombel</span>
+          </a>
+          <a href="/siswa" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+            {{ request()->is('siswa*') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('siswa*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+            </svg>
+            <span>Siswa</span>
+          </a>
+          <a href="/kelas" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+            {{ request()->is('kelas*') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('kelas*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+            </svg>
+            <span>Kelas</span>
+          </a>
+          <a href="/unit" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+            {{ request()->is('unit*') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('unit*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+            </svg>
+            <span>Unit</span>
+          </a>
+        </div>
+      </div>
     </nav>
   </div>
 
@@ -116,3 +151,17 @@
     </div>
   </div>
 </aside>
+
+<script>
+  function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    const icon = document.getElementById('dropdown-icon');
+    if (dropdown.classList.contains('hidden')) {
+      dropdown.classList.remove('hidden');
+      icon.classList.add('rotate-180');
+    } else {
+      dropdown.classList.add('hidden');
+      icon.classList.remove('rotate-180');
+    }
+  }
+</script>
