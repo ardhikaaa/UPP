@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Obat;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 
-class halaman_obatController extends Controller
+class KelasController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $obat = Obat::all();
-        return view('obat', compact('obat'));
+        $kelas = Kelas::all();
+        return view('kelas', compact('kelas'));
     }
 
     /**
@@ -21,7 +21,7 @@ class halaman_obatController extends Controller
      */
     public function create()
     {
-        return view('obat.create');
+        return view('kelas.create');
     }
 
     /**
@@ -30,12 +30,11 @@ class halaman_obatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_obat' => 'required|string|max:255',
-            'jumlah'    => 'required|integer|max:255',
+            'kelas' => 'required|string|max:255',
         ]);
 
-        Obat::create($request->all());
-        return redirect()->route('obat.index')->with('success', 'Data obat berhasil ditambahkan.');
+        Kelas::create($request->all());
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil ditambahkan.');
     }
 
     /**
@@ -51,33 +50,34 @@ class halaman_obatController extends Controller
      */
     public function edit(string $id)
     {
-        $obat = Obat::findOrFail($id);
-        return view('obat.edit', compact('obat'));
+        $kelas = Kelas::findOrFail($id);
+        return view('kelas.edit', compact('kelas'));
     }
+
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-       $request->validate([
-            'nama_obat' => 'required|string|max:255',
-            'jumlah'    => 'required|integer|max:255',
+        $request->validate([
+            'kelas' => 'required|string|max:255',
         ]);
 
-        $obat = Obat::findOrFail($id);
-        $obat->update($request->all());
+        $kelas = Kelas::findOrFail($id);
+        $kelas->update($request->all());
 
-        return redirect()->route('obat.index')->with('success', 'Data obat berhasil diupdate.');
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil diupdate.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        $delete = Obat::findOrFail($id);
+        $delete = Kelas::findOrFail($id);
         $delete->delete();
-        return redirect()->route('obat.index')->with('success', 'Data obat berhasil dihapus.');
+        return redirect()->route('kelas.index')->with('success', 'Data kelas berhasil dihapus.');
     }
 }
