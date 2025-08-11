@@ -46,17 +46,21 @@
           </p>
 
           <!-- Tombol aksi -->
-          <div class="mt-8 flex flex-wrap gap-4">
-            <a href="{{ route('login') }}" 
-               class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow">
-               Login
-            </a>
-            <a href="{{ route('register') }}" 
-               class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-3 rounded-lg shadow">
-               Register
-            </a>
-
-          </div>
+          @if (Route::has('login'))
+                <div class="links mt-8 flex flex-wrap gap-4">
+                    @auth
+                        <a href="{{ url('/kunjungan_uks') }}" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow">
+                          Dashboard</a>
+                    @else
+                        <a href="{{ route('login') }}" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow">
+                          Log in</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-3 rounded-lg shadow">
+                              Register</a>
+                        @endif
+                    @endauth
+                </div>
+            @endif
 
         <!-- Area kosong kanan agar foto tetap terlihat -->
         <div class="hidden md:block md:w-1/2"></div>
