@@ -24,19 +24,19 @@
         </div>
     </x-slot>
 
-    <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+    <div class="bg-white dark:bg-white-800 shadow-sm rounded-lg overflow-hidden">
         <!-- Search Section -->
-        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div class="p-6 border-b border-white-200 dark:border-white-700">
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="h-5 w-5 text-white-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
                         <input id="searchInput" type="text" placeholder="Cari kunjungan berdasarkan nama siswa..."
-                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white dark:bg-white-700 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                 </div>
             </div>
@@ -44,8 +44,8 @@
 
         <!-- Table Section -->
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-200">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-200">
+            <table class="w-full text-sm text-left text-white-700 dark:text-gray-200">
+                <thead class="text-xs text-white-700 uppercase bg-white-50 dark:bg-blue-600 dark:text-white-200 rounded-">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-medium">No</th>
                         <th scope="col" class="px-6 py-4 font-medium">Nama</th>
@@ -67,21 +67,22 @@
 
         <!-- Pagination -->
         <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-            <div class="flex items-center justify-between">
-                <div class="text-sm text-gray-700 dark:text-gray-300">
-                    Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">3</span> dari <span class="font-medium">3</span> hasil
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button class="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition duration-200">
-                        Sebelumnya
-                    </button>
-                    <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg">1</button>
-                    <button class="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition duration-200">
-                        Selanjutnya
-                    </button>
-                </div>
-            </div>
+    <div class="flex items-center justify-between">
+        <div class="text-sm text-gray-700 dark:text-gray-300">
+            Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">3</span> dari <span class="font-medium">3</span> hasil
         </div>
+        <div class="flex items-center space-x-2">
+            <button class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200">
+                Sebelumnya
+            </button>
+            <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg">1</button>
+            <button class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200">
+                Selanjutnya
+            </button>
+        </div>
+    </div>
+</div>
+
     </div>
 
     <!-- Modal -->
@@ -160,37 +161,37 @@
                 data.status === 'Kembali ke Kelas' ? 'green' :
                 data.status === 'Istirahat di UKS' ? 'yellow' : 'red';
             tbody.innerHTML += `
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-600 transition duration-200">
-                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${index + 1}</td>
-                    <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">${data.nama}</td>
-                    <td class="px-6 py-4">${data.kelas}</td>
-                    <td class="px-6 py-4">${data.diagnosa}</td>
-                    <td class="px-6 py-4">${data.obat}</td>
-                    <td class="px-6 py-4">${data.tanggal}</td>
-                    <td class="px-6 py-4">${data.guru}</td>
-                    <td class="px-6 py-4">${data.jumlah}</td>
-                    <td class="px-6 py-4">
-                        <span class="inline-block px-3 py-1 text-sm rounded-full bg-${statusColor}-100 text-${statusColor}-600 dark:bg-${statusColor}-900/20 dark:text-${statusColor}-400">
-                            ${data.status}
-                        </span>
-                    </td>
-                    <td class="px-6 py-4">
-                        <div class="flex items-center space-x-2">
-                            <button onclick="editData(${index})" 
-                                    class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition duration-200">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                </svg>
-                            </button>
-                            <button onclick="deleteData(${index})" 
-                                    class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition duration-200">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
+                <tr class="bg-white hover:bg-gray-50 dark:bg-gray-200 dark:hover:bg-gray-300 transition duration-200">
+    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${index + 1}</td>
+    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.nama}</td>
+    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.kelas}</td>
+    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.diagnosa}</td>
+    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.obat}</td>
+    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.tanggal}</td>
+    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.guru}</td>
+    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.jumlah}</td>
+    <td class="px-6 py-4">
+        <span class="inline-block px-3 py-1 text-sm rounded-full bg-${statusColor}-100 text-${statusColor}-600 dark:bg-${statusColor}-200 dark:text-${statusColor}-700">
+            ${data.status}
+        </span>
+    </td>
+    <td class="px-6 py-4">
+        <div class="flex items-center space-x-2">
+            <button onclick="editData(${index})" 
+                class="text-blue-600 hover:text-blue-900 dark:text-blue-700 dark:hover:text-blue-900 p-1 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-200 transition duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+            </button>
+            <button onclick="deleteData(${index})" 
+                class="text-red-600 hover:text-red-900 dark:text-red-700 dark:hover:text-red-900 p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-200 transition duration-200">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+            </button>
+        </div>
+    </td>
+</tr>
             `;
         });
     }
