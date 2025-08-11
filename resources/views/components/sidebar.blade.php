@@ -1,7 +1,7 @@
 <!-- Mobile Menu Button -->
 <div class="lg:hidden fixed top-4 left-4 z-50">
-    <button id="sidebar-toggle" class="p-2 bg-white rounded-lg shadow-lg border hover:bg-gray-50 transition-colors">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <button id="sidebar-toggle" class="p-2 bg-yellow-50 rounded-lg shadow-lg border border-yellow-200 hover:bg-yellow-100 transition-colors">
+        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
     </button>
@@ -30,26 +30,26 @@
     </div>
 
     <!-- Menu Items -->
-    <nav class="flex flex-col gap-2">
+    <nav class="flex flex-col gap-2 ">
       <a href="/kunjungan_uks" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-    {{ request()->is('kunjungan_uks') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('kunjungan_uks*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+    {{ request()->is('kunjungan_uks') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600  hover:bg-gray-50' }}">
+        <svg class="w-5 h-5 {{ request()->is('kunjungan_uks*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
           <path d="M3 3h14a1 1 0 011 1v3H2V4a1 1 0 011-1zM2 8h16v2H2V8zm0 4h16v2H2v-2zm0 4h16v1a1 1 0 01-1 1H3a1 1 0 01-1-1v-1z" />
         </svg>
-        <span class="hidden sm:inline">Data Kunjungan UKS</span>
+        <span class="hidden sm:inline ">Data Kunjungan UKS</span>
         <span class="sm:hidden">Dashboard</span>
       </a>
       <a href="/obat" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-    {{ request()->is('obat') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('obat*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+    {{ request()->is('obat') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+        <svg class="w-5 h-5 {{ request()->is('obat*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
           <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
         </svg>
         <span class="hidden sm:inline">Data Obat</span>
         <span class="sm:hidden">Obat</span>
       </a>
       <a href="/guru" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-    {{ request()->is('guru') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('guru*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+    {{ request()->is('guru') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+        <svg class="w-5 h-5 {{ request()->is('guru*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
           <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
         </svg>
         <span class="hidden sm:inline">Data Guru</span>
@@ -59,10 +59,10 @@
       <!-- Dropdown Menu for Rombel, Siswa, Kelas, Unit -->
       <div class="relative">
         <button type="button" class="dropdown-toggle flex items-center justify-between w-full gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-          {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-blue-600 bg-blue-50' : 'text-gray-400 hover:text-blue-600 hover:bg-gray-50' }}"
+          {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-400 hover:text-yellow-600 hover:bg-gray-50' }}"
           onclick="toggleDropdown('master-data-dropdown')">
           <div class="flex items-center gap-3">
-            <svg id="dropdown-icon" class="w-4 h-4 transition-transform {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-blue-600 rotate-180' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+            <svg id="dropdown-icon" class="w-4 h-4 transition-transform {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-yellow-600 rotate-180' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
               <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
           </svg>
             <span class="hidden sm:inline">Data Siswa</span>
@@ -77,29 +77,29 @@
           class="dropdown-menu mt-1 ml-4 space-y-1 
           {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? '' : 'hidden' }}">
           <a href="/rombel" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-            {{ request()->is('rombel*') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
-            <svg class="w-4 h-4 {{ request()->is('rombel*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+            {{ request()->is('rombel*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('rombel*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
               <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
             </svg>
             <span>Rombel</span>
           </a>
           <a href="/siswa" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-            {{ request()->is('siswa*') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
-            <svg class="w-4 h-4 {{ request()->is('siswa*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+            {{ request()->is('siswa*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('siswa*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
               <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
             </svg>
             <span>Siswa</span>
           </a>
           <a href="/kelas" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-            {{ request()->is('kelas*') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
-            <svg class="w-4 h-4 {{ request()->is('kelas*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+            {{ request()->is('kelas*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('kelas*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
               <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
             </svg>
             <span>Kelas</span>
           </a>
           <a href="/unit" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-            {{ request()->is('unit*') ? 'text-blue-600 bg-blue-50' : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50' }}">
-            <svg class="w-4 h-4 {{ request()->is('unit*') ? 'text-blue-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
+            {{ request()->is('unit*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('unit*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
               <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
             </svg>
             <span>Unit</span>
@@ -128,7 +128,7 @@
       <!-- Profile & Logout Buttons -->
       <div class="flex flex-col gap-2">
         <!-- Profile Button -->
-        <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors text-gray-600 hover:text-blue-600 hover:bg-gray-50">
+        <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors text-gray-600 hover:text-yellow-600 hover:bg-gray-50">
           <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
           </svg>
