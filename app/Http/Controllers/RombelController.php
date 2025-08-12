@@ -16,12 +16,11 @@ class RombelController extends Controller
     public function index()
     {
         $rombels = Rombel::with(['siswa', 'kelas', 'unit'])->get();
-        $units = Unit::all();            // <-- tambah ini
-        $kelas = Kelas::all();            // <-- tambah ini
-        $siswa = Siswa::all();            // <-- tambah ini
+        $units = Unit::all();
+        $kelas = Kelas::all();
+        $siswa = Siswa::all();
         return view('rombel', compact('rombels', 'units', 'kelas', 'siswa'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -32,7 +31,7 @@ class RombelController extends Controller
         $kelas = Kelas::all();
         $siswa = Siswa::all();
 
-    return view('rombel.create', compact('units', 'kelas', 'siswa'));
+        return view('rombel.create', compact('units', 'kelas', 'siswa'));
     }
 
     /**
@@ -41,18 +40,18 @@ class RombelController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-        'unit_id'  => 'required|exists:units,id',
-        'kelas_id' => 'required|exists:kelas,id',
-        'siswa_id' => 'required|exists:siswas,id',
-    ]);
+            'unit_id'  => 'required|exists:units,id',
+            'kelas_id' => 'required|exists:kelas,id',
+            'siswa_id' => 'required|exists:siswas,id',
+        ]);
 
-    Rombel::create([
-        'unit_id'  => $request->unit_id,
-        'kelas_id' => $request->kelas_id,
-        'siswa_id' => $request->siswa_id,
-    ]);
+        Rombel::create([
+            'unit_id'  => $request->unit_id,
+            'kelas_id' => $request->kelas_id,
+            'siswa_id' => $request->siswa_id,
+        ]);
 
-    return redirect()->route('rombel.index')->with('success', 'Rombel berhasil dibuat');
+        return redirect()->route('rombel.index')->with('success', 'Rombel berhasil dibuat');
     }
 
     /**
@@ -68,7 +67,17 @@ class RombelController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $rombel = Rombel::with(['siswa', 'kelas', 'unit'])->findOrFail($id);
+        $units = Unit::all();
+        $kelas = Kelas::all();
+        $siswa = Siswa::all();
+        
+        return response()->json([
+            'rombel' => $rombel,
+            'units' => $units,
+            'kelas' => $kelas,
+            'siswa' => $siswa
+        ]);
     }
 
     /**
@@ -76,7 +85,20 @@ class RombelController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'unit_id'  => 'required|exists:units,id',
+            'kelas_id' => 'required|exists:kelas,id',
+            'siswa_id' => 'required|exists:siswas,id',
+        ]);
+
+        $rombel = Rombel::findOrFail($id);
+        $rombel->update([
+            'unit_id'  => $request->unit_id,
+            'kelas_id' => $request->kelas_id,
+            'siswa_id' => $request->siswa_id,
+        ]);
+
+        return redirect()->route('rombel.index')->with('success', 'Data rombel berhasil diperbarui.');
     }
 
     /**

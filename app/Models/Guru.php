@@ -10,4 +10,10 @@ class Guru extends Model
         'nama',
         'mapel',
     ];
+
+    public function kunjungan()
+    {
+        return $this->hasMany(Kunjungan::class, 'guru_id');
+    }
 }
+

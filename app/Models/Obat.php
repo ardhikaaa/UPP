@@ -12,4 +12,9 @@ class Obat extends Model
         'nama_obat',
         'jumlah'
     ];
+
+    public function kunjungan()
+    {
+        return $this->hasMany(Kunjungan::class, 'obat_id');
+    }
 }
