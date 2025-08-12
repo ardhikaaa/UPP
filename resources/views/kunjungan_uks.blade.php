@@ -1,262 +1,487 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Data Kunjungan UKS</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
 <x-app-layout>
-<body class="bg-gray-50 text-gray-800">
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Data Kunjungan UKS') }}
+                {{ __('Kunjungan UKS') }}
             </h2>
-            <button onclick="openModal()"
+            <button data-modal-target="tambah-kunjungan-modal" data-modal-toggle="tambah-kunjungan-modal" 
                     class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 text-white text-sm font-medium rounded-lg transition duration-200">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                Tambah Kunjungan
+                Tambah Data Kunjungan
             </button>
         </div>
     </x-slot>
 
-    <div class="bg-white dark:bg-white-800 shadow-sm rounded-lg overflow-hidden">
+    <div class="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
         <!-- Search Section -->
-        <div class="p-6 border-b border-white-200 dark:border-white-700">
+        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-white-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input id="searchInput" type="text" placeholder="Cari kunjungan berdasarkan nama siswa..."
-                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white dark:bg-white-700 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" placeholder="Cari info kunjungan..." 
+                               class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
                     </div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg transition duration-200">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Table Section -->
         <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-white-700 dark:text-gray-200">
-                <thead class="text-xs text-white-700 uppercase bg-white-50 dark:bg-blue-600 dark:text-white-200 rounded-">
+            @if (session('success'))
+                <div id="success-alert" class="relative p-4 mb-4 text-sm text-green-800 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200 flex justify-between items-start">
+                    <div>
+                        {{ session('success') }} 
+                    </div>
+                    <button type="button" onclick="document.getElementById('success-alert').remove()" class="ml-4 text-green-900 dark:text-green-100 hover:text-red-500 rounded focus:outline-none">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            @endif
+
+            <table class="w-full text-sm text-left text-gray-700 dark:text-gray-200">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-200">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-medium">No</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Nama</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Unit</th>
                         <th scope="col" class="px-6 py-4 font-medium">Kelas</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Nama Siswa</th>
                         <th scope="col" class="px-6 py-4 font-medium">Diagnosa</th>
                         <th scope="col" class="px-6 py-4 font-medium">Obat</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Tanggal</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Guru</th>
                         <th scope="col" class="px-6 py-4 font-medium">Jumlah</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Status</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Guru</th>
+                        <th scope="col" class="px-6 py-4 font-medium">Tanggal</th>
                         <th scope="col" class="px-6 py-4 font-medium">Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody" class="divide-y divide-gray-200 dark:divide-gray-600">
-                    <!-- Data will be populated by JavaScript -->
+                <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+                    @foreach ($kunjungan as $item)
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-600 transition duration-200">
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $loop->iteration }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $item->rombel->unit->unit }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $item->rombel->kelas->kelas }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $item->rombel->siswa->nama_siswa }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $item->diagnosa }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $item->obat->nama_obat }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $item->jumlah_obat }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $item->guru->nama }}</td>
+                        <td class="px-6 py-4 font-medium text-gray-900 dark:text-white">{{ $item->tanggal }}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center space-x-2">
+                                <button 
+                                    class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 transition duration-200 btn-edit-obat"
+                                    data-id         ="{{ $item->id }}"
+                                    data-unit-id    ="{{ $item->rombel->unit->id }}"
+                                    data-kelas-id   ="{{ $item->rombel->kelas->id }}"
+                                    data-siswa-id   ="{{ $item->rombel->siswa->id }}"
+                                    data-diagnosa   ="{{ $item->diagnosa }}"
+                                    data-obat-id    ="{{ $item->obat->id }}"
+                                    data-jumlah     ="{{ $item->jumlah_obat }}"
+                                    data-guru-id    ="{{ $item->guru->id }}"
+                                    data-tanggal    ="{{ $item->tanggal }}"
+                                    data-modal-target="edit-kunjungan-modal" data-modal-toggle="edit-kunjungan-modal"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                    </svg>
+                                </button>
+                                <form action="{{ route('kunjungan.destroy', $item->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
 
         <!-- Pagination -->
         <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-    <div class="flex items-center justify-between">
-        <div class="text-sm text-gray-700 dark:text-gray-300">
-            Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">3</span> dari <span class="font-medium">3</span> hasil
-        </div>
-        <div class="flex items-center space-x-2">
-            <button class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200">
-                Sebelumnya
-            </button>
-            <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg">1</button>
-            <button class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200">
-                Selanjutnya
-            </button>
-        </div>
-    </div>
-</div>
-
-    </div>
-
-    <!-- Modal -->
-    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-        <div class="relative bg-white dark:bg-gray-700 rounded-lg shadow-sm w-full max-w-2xl mx-4">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b border-gray-200 dark:border-gray-600">
-                <h3 id="modalTitle" class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Tambah Kunjungan UKS
-                </h3>
-                <button type="button" onclick="closeModal()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                </button>
+            <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-700 dark:text-gray-300">
+                    Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">{{ $kunjungan->count() }}</span> dari <span class="font-medium">{{ $kunjungan->count() }}</span> hasil
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition duration-200">
+                        Sebelumnya
+                    </button>
+                    <button class="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg">1</button>
+                    <button class="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition duration-200">
+                        Selanjutnya
+                    </button>
+                </div>
             </div>
-            <!-- Modal body -->
-            <form id="form" class="p-4 md:p-5 space-y-4">
+        </div>
+    </div>
+
+    <!-- Modal Tambah Unit -->
+    <div id="tambah-kunjungan-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Tambah Data Kunjungan
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="tambah-kunjungan-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <form action="{{ route('kunjungan.store') }}" method="POST" class="p-4 md:p-5 space-y-4">
+                    @csrf
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Siswa</label>
-                        <input type="text" id="nama" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan nama siswa" required>
+                        <label for="unit_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unit</label>
+                        <select name="unit_id" id="unit_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                            <option value="">-- Pilih Unit --</option>
+                            @php
+                                $uniqueUnits = $rombel->unique('unit_id');
+                            @endphp
+                            @foreach ($uniqueUnits as $r)
+                                <option value="{{ $r->unit->id }}">{{ $r->unit->unit }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas</label>
-                        <input type="text" id="kelas" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan kelas" required>
-                    </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Diagnosa</label>
-                        <input type="text" id="diagnosa" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan diagnosa" required>
-                    </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Obat</label>
-                        <input type="text" id="obat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan obat" required>
-                    </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
-                        <input type="date" id="tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
-                    </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Guru</label>
-                        <input type="text" id="guru" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan nama guru" required>
-                    </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah Obat</label>
-                        <input type="number" id="jumlah_obat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan jumlah" required>
-                    </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                        <select id="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
-                            <option value="">Pilih Status</option>
-                            <option value="Kembali ke Kelas">Kembali ke Kelas</option>
-                            <option value="Istirahat di UKS">Istirahat di UKS</option>
-                            <option value="Pulang">Pulang</option>
+                        <label for="kelas_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas</label>
+                        <select name="kelas_id" id="kelas_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                            <option value="">-- Pilih Kelas --</option>
                         </select>
                     </div>
                 </div>
+                    <div>
+                        <label for="siswa_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Siswa</label>
+                        <select name="siswa_id" id="siswa_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                            <option value="">-- Pilih Siswa --</option>
+                        </select>
+                    </div>
+                    <label for="obat_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Obat</label>
+                    <select name="obat_id" id="obat_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                        <option value="">-- Pilih Obat --</option>
+                        @foreach ($obat as $o)
+                            <option value="{{ $o->id }}">{{ $o->nama_obat }}</option>
+                        @endforeach
+                    </select>
+                    <label for="guru_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Guru</label>
+                    <select name="guru_id" id="guru_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                        <option value="">-- Pilih Guru --</option>
+                        @foreach ($guru as $g)
+                            <option value="{{ $g->id }}">{{ $g->nama }}</option>
+                        @endforeach
+                    </select>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Diagnosa</label>
+                        <input type="text" name="diagnosa" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan diagnosa" required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah Obat</label>
+                        <input type="text" name="jumlah_obat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan diagnosa" required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
+                        <input type="date" name="tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                    </div>
                 <!-- Modal footer -->
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Simpan</button>
-                    <button type="button" onclick="closeModal()" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Batal</button>
+                    <button data-modal-hide="tambah-kunjungan-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Batal</button>
                 </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
-    <script>
-    let siswaData = [];
-    let editIndex = null;
+    <!-- Modal Edit Kunjungan -->
+    <div id="edit-kunjungan-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-md max-h-full">
+            <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Edit Data Kunjungan
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="edit-kunjungan-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <form id="form-edit-kunjungan" method="POST" class="p-4 md:p-5 space-y-4">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="id" id="edit-id">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="edit-unit_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Unit</label>
+                            <select name="unit_id" id="edit-unit_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                                <option value="">-- Pilih Unit --</option>
+                                @php
+                                    $uniqueUnits = $rombel->unique('unit_id');
+                                @endphp
+                                @foreach ($uniqueUnits as $r)
+                                    <option value="{{ $r->unit->id }}">{{ $r->unit->unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="edit-kelas_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Kelas</label>
+                            <select name="kelas_id" id="edit-kelas_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                                <option value="">-- Pilih Kelas --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="edit-siswa_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama Siswa</label>
+                        <select name="siswa_id" id="edit-siswa_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                            <option value="">-- Pilih Siswa --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit-obat_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Obat</label>
+                        <select name="obat_id" id="edit-obat_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                            <option value="">-- Pilih Obat --</option>
+                            @foreach ($obat as $o)
+                                <option value="{{ $o->id }}">{{ $o->nama_obat }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit-guru_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Guru</label>
+                        <select name="guru_id" id="edit-guru_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                            <option value="">-- Pilih Guru --</option>
+                            @foreach ($guru as $g)
+                                <option value="{{ $g->id }}">{{ $g->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Diagnosa</label>
+                        <input type="text" name="diagnosa" id="edit-diagnosa" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan diagnosa" required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jumlah Obat</label>
+                        <input type="text" name="jumlah_obat" id="edit-jumlah_obat" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Masukkan jumlah obat" required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tanggal</label>
+                        <input type="date" name="tanggal" id="edit-tanggal" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required>
+                    </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Update</button>
+                    <button data-modal-hide="edit-kunjungan-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Batal</button>
+                </div>
+              </form>
+          </div>
+      </div>
+    </div>
 
-    function renderTable() {
-        const tbody = document.getElementById('tableBody');
-        tbody.innerHTML = '';
-        siswaData.forEach((data, index) => {
-            const statusColor =
-                data.status === 'Kembali ke Kelas' ? 'green' :
-                data.status === 'Istirahat di UKS' ? 'yellow' : 'red';
-            tbody.innerHTML += `
-                <tr class="bg-white hover:bg-gray-50 dark:bg-gray-200 dark:hover:bg-gray-300 transition duration-200">
-    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${index + 1}</td>
-    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.nama}</td>
-    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.kelas}</td>
-    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.diagnosa}</td>
-    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.obat}</td>
-    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.tanggal}</td>
-    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.guru}</td>
-    <td class="px-6 py-4 font-medium text-gray-700 dark:text-gray-800">${data.jumlah}</td>
-    <td class="px-6 py-4">
-        <span class="inline-block px-3 py-1 text-sm rounded-full bg-${statusColor}-100 text-${statusColor}-600 dark:bg-${statusColor}-200 dark:text-${statusColor}-700">
-            ${data.status}
-        </span>
-    </td>
-    <td class="px-6 py-4">
-        <div class="flex items-center space-x-2">
-            <button onclick="editData(${index})" 
-                class="text-blue-600 hover:text-blue-900 dark:text-blue-700 dark:hover:text-blue-900 p-1 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-200 transition duration-200">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                </svg>
-            </button>
-            <button onclick="deleteData(${index})" 
-                class="text-red-600 hover:text-red-900 dark:text-red-700 dark:hover:text-red-900 p-1 rounded-lg hover:bg-red-50 dark:hover:bg-red-200 transition duration-200">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                </svg>
-            </button>
-        </div>
-    </td>
-</tr>
-            `;
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+</x-app-layout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Handle edit button clicks
+    document.querySelectorAll('.btn-edit-obat').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const unitId = this.getAttribute('data-unit-id');
+            const kelasId = this.getAttribute('data-kelas-id');
+            const siswaId = this.getAttribute('data-siswa-id');
+            const diagnosa = this.getAttribute('data-diagnosa');
+            const obatId = this.getAttribute('data-obat-id');
+            const jumlah = this.getAttribute('data-jumlah');
+            const guruId = this.getAttribute('data-guru-id');
+            const tanggal = this.getAttribute('data-tanggal');
+
+            // Set form action
+            document.getElementById('form-edit-kunjungan').action = `/kunjungan/${id}`;
+            
+            // Set form values
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-diagnosa').value = diagnosa;
+            document.getElementById('edit-jumlah_obat').value = jumlah;
+            document.getElementById('edit-tanggal').value = tanggal;
+            document.getElementById('edit-obat_id').value = obatId;
+            document.getElementById('edit-guru_id').value = guruId;
+
+            // Set dropdown values and trigger loading
+            document.getElementById('edit-unit_id').value = unitId;
+            
+            // Load kelas for the selected unit
+            if (unitId) {
+                fetch(`/get-kelas/${unitId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const kelasSelect = document.getElementById('edit-kelas_id');
+                        kelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+                        data.forEach(kelas => {
+                            const option = document.createElement('option');
+                            option.value = kelas.id;
+                            option.textContent = kelas.kelas;
+                            kelasSelect.appendChild(option);
+                        });
+                        kelasSelect.value = kelasId;
+                        
+                        // Load siswa for the selected kelas and unit
+                        if (kelasId) {
+                            fetch(`/get-siswa/${unitId}/${kelasId}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    const siswaSelect = document.getElementById('edit-siswa_id');
+                                    siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+                                    data.forEach(siswa => {
+                                        const option = document.createElement('option');
+                                        option.value = siswa.id;
+                                        option.textContent = siswa.nama_siswa;
+                                        siswaSelect.appendChild(option);
+                                    });
+                                    siswaSelect.value = siswaId;
+                                });
+                        }
+                    });
+            }
+        });
+    });
+
+    // Dynamic dropdown functionality for add modal
+    const unitSelect = document.getElementById('unit_id');
+    const kelasSelect = document.getElementById('kelas_id');
+    const siswaSelect = document.getElementById('siswa_id');
+
+    // Dynamic dropdown functionality for edit modal
+    const editUnitSelect = document.getElementById('edit-unit_id');
+    const editKelasSelect = document.getElementById('edit-kelas_id');
+    const editSiswaSelect = document.getElementById('edit-siswa_id');
+
+    // When unit changes, load kelas (add modal)
+    if (unitSelect) {
+        unitSelect.addEventListener('change', function () {
+            const unitId = this.value;
+            kelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+            siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+
+            if (unitId) {
+                fetch(`/get-kelas/${unitId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(kelas => {
+                            const option = document.createElement('option');
+                            option.value = kelas.id;
+                            option.textContent = kelas.kelas;
+                            kelasSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading kelas:', error);
+                        kelasSelect.innerHTML = '<option value="">Error loading kelas</option>';
+                    });
+            }
         });
     }
 
-    function openModal() {
-        document.getElementById('modal').classList.remove('hidden');
-        document.getElementById('modalTitle').innerText = editIndex === null ? 'Tambah Kunjungan UKS' : 'Edit Kunjungan UKS';
-        if (editIndex !== null) {
-            const data = siswaData[editIndex];
-            document.getElementById('nama').value = data.nama;
-            document.getElementById('kelas').value = data.kelas;
-            document.getElementById('diagnosa').value = data.diagnosa;
-            document.getElementById('obat').value = data.obat;
-            document.getElementById('tanggal').value = data.tanggal;
-            document.getElementById('guru').value = data.guru;
-            document.getElementById('jumlah_obat').value = data.jumlah;
-            document.getElementById('status').value = data.status;
-        } else {
-            document.getElementById('form').reset();
-        }
+    // When kelas changes, load siswa (add modal)
+    if (kelasSelect) {
+        kelasSelect.addEventListener('change', function () {
+            const kelasId = this.value;
+            const unitId = unitSelect.value;
+            siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+
+            if (kelasId && unitId) {
+                fetch(`/get-siswa/${unitId}/${kelasId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(siswa => {
+                            const option = document.createElement('option');
+                            option.value = siswa.id;
+                            option.textContent = siswa.nama_siswa;
+                            siswaSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading siswa:', error);
+                        siswaSelect.innerHTML = '<option value="">Error loading siswa</option>';
+                    });
+            }
+        });
     }
 
-    function closeModal() {
-        document.getElementById('modal').classList.add('hidden');
-        editIndex = null;
+    // When unit changes, load kelas (edit modal)
+    if (editUnitSelect) {
+        editUnitSelect.addEventListener('change', function () {
+            const unitId = this.value;
+            editKelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+            editSiswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+
+            if (unitId) {
+                fetch(`/get-kelas/${unitId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(kelas => {
+                            const option = document.createElement('option');
+                            option.value = kelas.id;
+                            option.textContent = kelas.kelas;
+                            editKelasSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading kelas:', error);
+                        editKelasSelect.innerHTML = '<option value="">Error loading kelas</option>';
+                    });
+            }
+        });
     }
 
-    function deleteData(index) {
-        if (confirm("Yakin ingin menghapus data ini?")) {
-            siswaData.splice(index, 1);
-            renderTable();
-        }
+    // When kelas changes, load siswa (edit modal)
+    if (editKelasSelect) {
+        editKelasSelect.addEventListener('change', function () {
+            const kelasId = this.value;
+            const unitId = editUnitSelect.value;
+            editSiswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+
+            if (kelasId && unitId) {
+                fetch(`/get-siswa/${unitId}/${kelasId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(siswa => {
+                            const option = document.createElement('option');
+                            option.value = siswa.id;
+                            option.textContent = siswa.nama_siswa;
+                            editSiswaSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading siswa:', error);
+                        editSiswaSelect.innerHTML = '<option value="">Error loading siswa</option>';
+                    });
+            }
+        });
     }
-
-    function editData(index) {
-        editIndex = index;
-        openModal();
-    }
-
-    document.getElementById('form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const newData = {
-            nama: document.getElementById('nama').value,
-            kelas: document.getElementById('kelas').value,
-            diagnosa: document.getElementById('diagnosa').value,
-            obat: document.getElementById('obat').value,
-            tanggal: document.getElementById('tanggal').value,
-            guru: document.getElementById('guru').value,
-            jumlah: document.getElementById('jumlah_obat').value,
-            status: document.getElementById('status').value,
-        };
-        if (editIndex === null) {
-            siswaData.push(newData);
-        } else {
-            siswaData[editIndex] = newData;
-            editIndex = null;
-        }
-        closeModal();
-        renderTable();
-    });
-
-    // Inisialisasi awal
-    renderTable();
-    </script>
-
-</body>
-</x-app-layout>
-</html>
+});
+</script>
