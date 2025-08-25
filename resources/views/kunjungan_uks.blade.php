@@ -5,7 +5,7 @@
                 {{ __('Kunjungan UKS') }}
             </h2>
             <button data-modal-target="tambah-kunjungan-modal" data-modal-toggle="tambah-kunjungan-modal" 
-                    class="inline-flex items-center px-4 py-2 bg-[#1a5d94] hover:bg-[#142143] focus:ring-4 focus:ring-[#1a5d94]/30 text-white text-sm font-medium rounded-lg transition duration-200">
+                    class="inline-flex items-center px-4 py-2 bg-[#0072BC] hover:bg-[#142143] focus:ring-4 focus:ring-[#1a5d94]/30 text-white text-sm font-medium rounded-lg transition duration-200">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
@@ -55,7 +55,7 @@
             @endif
 
             <table class="w-full text-sm text-left text-[#142143]">
-                <thead class="text-xs uppercase bg-[#1a5d94] text-white">
+                <thead class="text-xs uppercase bg-[#0072BC] text-white">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-medium">No</th>
                         <th scope="col" class="px-6 py-4 font-medium">Unit</th>
@@ -84,7 +84,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center space-x-2">
                                 <button 
-                                    class="text-[#1a5d94] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-obat"
+                                    class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-obat"
                                     data-id         ="{{ $item->id }}"
                                     data-unit-id    ="{{ $item->rombel->unit->id }}"
                                     data-kelas-id   ="{{ $item->rombel->kelas->id }}"
@@ -127,7 +127,7 @@
                     <button class="px-3 py-1 text-sm bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
                         Sebelumnya
                     </button>
-                    <button class="px-3 py-1 text-sm bg-[#1a5d94] text-white rounded-lg">1</button>
+                    <button class="px-3 py-1 text-sm bg-[#0072BC] text-white rounded-lg">1</button>
                     <button class="px-3 py-1 text-sm bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
                         Selanjutnya
                     </button>

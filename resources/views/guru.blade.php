@@ -5,7 +5,7 @@
                 {{ __('Data Guru') }}
             </h2>
             <button data-modal-target="tambah-guru-modal" data-modal-toggle="tambah-guru-modal" 
-                    class="inline-flex items-center px-4 py-2 bg-[#1a5d94] hover:bg-[#142143] focus:ring-4 focus:ring-[#1a5d94]/30 text-white text-sm font-medium rounded-lg transition duration-200">
+                    class="inline-flex items-center px-4 py-2 bg-[#0072BC] hover:bg-[#142143] focus:ring-4 focus:ring-[#1a5d94]/30 text-white text-sm font-medium rounded-lg transition duration-200">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
@@ -55,7 +55,7 @@
             @endif
 
             <table class="w-full text-sm text-left text-[#142143]">
-                <thead class="text-xs uppercase bg-[#1a5d94] text-white">
+                <thead class="text-xs uppercase bg-[#0072BC] text-white">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-medium">No</th>
                         <th scope="col" class="px-6 py-4 font-medium">Nama Guru</th>
@@ -84,7 +84,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center space-x-2">
                                 <button 
-                                    class="text-[#1a5d94] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-guru"
+                                    class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-guru"
                                     data-id="{{ $guru->id }}"
                                     data-nama="{{ $guru->nama }}"
                                     data-mapel="{{ $guru->mapel }}"

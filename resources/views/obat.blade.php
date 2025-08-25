@@ -5,7 +5,7 @@
                 {{ __('Data Obat') }}
             </h2>
             <button data-modal-target="tambah-obat-modal" data-modal-toggle="tambah-obat-modal" 
-                    class="inline-flex items-center px-4 py-2 bg-[#1a5d94] hover:bg-[#142143] focus:ring-4 focus:ring-[#1a5d94]/30 text-white text-sm font-medium rounded-lg transition duration-200">
+                    class="inline-flex items-center px-4 py-2 bg-[#0072BC] hover:bg-[#142143] focus:ring-4 focus:ring-[#1a5d94]/30 text-white text-sm font-medium rounded-lg transition duration-200">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
@@ -55,7 +55,7 @@
             @endif
 
             <table class="w-full text-sm text-left text-[#142143]">
-                <thead class="text-xs uppercase bg-[#1a5d94] text-white">
+                <thead class="text-xs uppercase bg-[#0072BC] text-white">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-medium">No</th>
                         <th scope="col" class="px-6 py-4 font-medium">Nama Obat</th>
@@ -72,7 +72,7 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center space-x-2">
                                 <button 
-                                    class="text-[#1a5d94] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-obat"
+                                    class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#0072BC]/10 transition duration-200 btn-edit-obat"
                                     data-id="{{ $item->id }}"
                                     data-obat="{{ $item->nama_obat }}"
                                     data-jumlah="{{ $item->jumlah }}"
@@ -109,7 +109,7 @@
                     <button class="px-3 py-1 text-sm bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
                         Sebelumnya
                     </button>
-                    <button class="px-3 py-1 text-sm bg-[#1a5d94] text-white rounded-lg">1</button>
+                    <button class="px-3 py-1 text-sm bg-[#0072BC] text-white rounded-lg">1</button>
                     <button class="px-3 py-1 text-sm bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
                         Selanjutnya
                     </button>
@@ -184,7 +184,7 @@
                     </div>
                 <!-- Modal footer -->
                 <div class="flex items-center p-4 md:p-5 border-t border-[#142143]/20 rounded-b">
-                    <button type="submit" class="text-white bg-[#1a5d94] hover:bg-[#142143] focus:ring-4 focus:outline-none focus:ring-[#1a5d94]/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Update</button>
+                    <button type="submit" class="text-white bg-[#0072BC] hover:bg-[#142143] focus:ring-4 focus:outline-none focus:ring-[#1a5d94]/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Update</button>
                     <button data-modal-hide="edit-obat-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-[#142143] focus:outline-none bg-[#e4e4e4] rounded-lg border border-[#142143]/30 hover:bg-[#142143]/10">Batal</button>
                 </div>
               </form>
