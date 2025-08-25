@@ -39,24 +39,26 @@
     <nav class="flex flex-col gap-2 ">
       <a href="/kunjungan_uks" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
     {{ request()->is('kunjungan_uks') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600  hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('kunjungan_uks*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M3 3h14a1 1 0 011 1v3H2V4a1 1 0 011-1zM2 8h16v2H2V8zm0 4h16v2H2v-2zm0 4h16v1a1 1 0 01-1 1H3a1 1 0 01-1-1v-1z" />
+        <svg class="w-5 h-5 {{ request()->is('kunjungan_uks*') ? 'text-yellow-500' : 'text-gray-400' }}" 
+            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+        <path d="m16 24h-8v-8h-8v-8h8v-8h8v8h8v8h-8z"/>
         </svg>
+
         <span class="hidden sm:inline ">Data Kunjungan UKS</span>
         <span class="sm:hidden">Dashboard</span>
       </a>
       <a href="/obat" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
     {{ request()->is('obat') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('obat*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+        <svg class="w-5 h-5 {{ request()->is('obat*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+          <path d="m0,11v-5C0,2.692,2.692,0,6,0s6,2.692,6,6v5H0Zm12.258,10.328c-.787-1.075-1.258-2.396-1.258-3.828,0-3.584,2.916-6.5,6.5-6.5,1.432,0,2.752.471,3.828,1.258l-9.069,9.069Zm1.414,1.414c1.075.787,2.396,1.258,3.828,1.258,3.584,0,6.5-2.916,6.5-6.5,0-1.432-.471-2.752-1.258-3.828l-9.069,9.069Zm-4.672-5.242c0-1.655.48-3.194,1.298-4.5H0v5c0,3.308,2.692,6,6,6,1.719,0,3.268-.731,4.363-1.894-.859-1.328-1.363-2.907-1.363-4.606Z"/>
         </svg>
         <span class="hidden sm:inline">Data Obat</span>
         <span class="sm:hidden">Obat</span>
       </a>
       <a href="/guru" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
     {{ request()->is('guru') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('guru*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+        <svg class="w-5 h-5 {{ request()->is('guru*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+          <path d="m14,23c0,.552-.448,1-1,1H1c-.552,0-1-.448-1-1,0-3.866,3.134-7,7-7s7,3.134,7,7ZM7,6c-2.209,0-4,1.791-4,4s1.791,4,4,4,4-1.791,4-4-1.791-4-4-4Zm17-1v8c0,2.761-2.239,5-5,5h-4.526c-.945-1.406-2.275-2.533-3.839-3.227,1.437-1.096,2.365-2.826,2.365-4.773,0-3.314-2.686-6-6-6-1.084,0-2.102.288-2.979.791.112-2.658,2.294-4.791,4.979-4.791h10c2.761,0,5,2.239,5,5Zm-4,10c0-.553-.448-1-1-1h-3.5c-.552,0-1,.447-1,1s.448,1,1,1h3.5c.552,0,1-.447,1-1Z"/>
         </svg>
         <span class="hidden sm:inline">Data Guru</span>
         <span class="sm:hidden">Guru</span>
@@ -68,8 +70,8 @@
           {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-400 hover:text-yellow-600 hover:bg-gray-50' }}"
           onclick="toggleDropdown('master-data-dropdown')">
           <div class="flex items-center gap-3">
-            <svg id="dropdown-icon" class="w-4 h-4 transition-transform {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-yellow-600 rotate-180' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+            <svg id="dropdown-icon" class="w-4 h-4 {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-yellow-600' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+             <path d="m15.5,23c0,.552-.448,1-1,1h-5c-.552,0-1-.448-1-1,0-1.5,1.737-3,3.5-3s3.5,1.5,3.5,3Zm-12.269-4c1.381,0,2.5-1.119,2.5-2.5s-1.119-2.5-2.5-2.5-2.5,1.119-2.5,2.5,1.119,2.5,2.5,2.5Zm8.769,0c1.381,0,2.5-1.119,2.5-2.5s-1.119-2.5-2.5-2.5-2.5,1.119-2.5,2.5,1.119,2.5,2.5,2.5ZM19,0H5C2.239,0,0,2.239,0,5v8.381c.819-.848,1.962-1.381,3.231-1.381,2.143,0,3.934,1.508,4.385,3.517.451-2.009,2.242-3.517,4.385-3.517s3.934,1.508,4.385,3.517c.451-2.009,2.242-3.517,4.385-3.517,1.269,0,2.412.533,3.231,1.381V5c0-2.761-2.239-5-5-5Zm1.769,19c1.381,0,2.5-1.119,2.5-2.5s-1.119-2.5-2.5-2.5-2.5,1.119-2.5,2.5,1.119,2.5,2.5,2.5Zm-.019,1c-1.667,0-3.183,1.539-3.25,3,0,.552.448,1,1,1h4.5c.552,0,1-.448,1-1-.079-1.458-1.585-3-3.25-3Zm-17.5,0c-1.667,0-3.183,1.539-3.25,3,0,.552.448,1,1,1h4.5c.552,0,1-.448,1-1-.079-1.458-1.585-3-3.25-3Z"/>
           </svg>
             <span class="hidden sm:inline">Data Siswa</span>
             <span class="sm:hidden">Data</span>
@@ -84,29 +86,29 @@
           {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? '' : 'hidden' }}">
           <a href="/rombel" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
             {{ request()->is('rombel*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
-            <svg class="w-4 h-4 {{ request()->is('rombel*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+            <svg class="w-4 h-4 {{ request()->is('rombel*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+              <path d="m18.5,16c-2.206,0-4-1.794-4-4s1.794-4,4-4,4,1.794,4,4-1.794,4-4,4Zm-6.5-8c-2.206,0-4-1.794-4-4S9.794,0,12,0s4,1.794,4,4-1.794,4-4,4Zm-6.5,8c-2.206,0-4-1.794-4-4s1.794-4,4-4,4,1.794,4,4-1.794,4-4,4Zm5.5,8v-3c0-1.629-1.3-2.947-2.918-2.992l-2.582,2.992-2.621-2.988c-1.6.065-2.879,1.372-2.879,2.988v3m24,0v-3c0-1.629-1.3-2.947-2.918-2.992l-2.582,2.992-2.621-2.988c-1.6.065-2.879,1.372-2.879,2.988v3"/>
             </svg>
             <span>Rombel</span>
           </a>
           <a href="/siswa" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
             {{ request()->is('siswa*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
-            <svg class="w-4 h-4 {{ request()->is('siswa*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+            <svg class="w-4 h-4 {{ request()->is('siswa*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+              <path d="m22.004,4.498c.001-.865-.525-1.61-1.34-1.898L14.199.319c-1.388-.491-2.916-.492-4.303-.006L3.353,2.603c-.818.286-1.346,1.03-1.346,1.896,0,.867.529,1.611,1.347,1.896l6.507,2.27c.689.24,1.414.361,2.138.361s1.448-.121,2.137-.361l5.864-2.045v4.379c0,.552.448,1,1,1s1-.448,1-1c0,0,.004-6.493.004-6.502Zm-7.209,6.056l3.205-1.118v.564c0,3.309-2.691,6-6,6s-6-2.691-6-6v-.563l3.203,1.118c1.799.627,3.794.627,5.592,0Zm4.205,13.446H5c-.318,0-.617-.151-.805-.407s-.244-.586-.15-.89c1.044-3.358,4.315-5.703,7.955-5.703s6.911,2.345,7.955,5.703c.094.303.039.634-.15.89s-.487.407-.805.407Z"/>
             </svg>
             <span>Siswa</span>
           </a>
           <a href="/kelas" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
             {{ request()->is('kelas*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
-            <svg class="w-4 h-4 {{ request()->is('kelas*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+            <svg class="w-4 h-4 {{ request()->is('kelas*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+              <path d="m2,2.5c0-1.381,1.119-2.5,2.5-2.5s2.5,1.119,2.5,2.5-1.119,2.5-2.5,2.5-2.5-1.119-2.5-2.5Zm13,3.5v2h-7v6H0v-5c0-1.654,1.346-3,3-3h12ZM21,0h-12.76c.479.715.76,1.575.76,2.5,0,.526-.092,1.031-.258,1.5h8.258v6h-7v4h8v-2h4v2h2V3c0-1.657-1.343-3-3-3ZM3.5,20c1.105,0,2-.895,2-2s-.895-2-2-2-2,.895-2,2,.895,2,2,2Zm8.5,0c1.105,0,2-.895,2-2s-.895-2-2-2-2,.895-2,2,.895,2,2,2Zm8.5,0c1.105,0,2-.895,2-2s-.895-2-2-2-2,.895-2,2,.895,2,2,2Zm-13.5,3c0-1.103-.897-2-2-2h-3c-1.103,0-2,.897-2,2v1h7v-1Zm17,0c0-1.103-.897-2-2-2h-3c-1.103,0-2,.897-2,2v1h7v-1Zm-8.5,0c0-1.103-.897-2-2-2h-3c-1.103,0-2,.897-2,2v1h7v-1Z"/>
             </svg>
             <span>Kelas</span>
           </a>
           <a href="/unit" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
             {{ request()->is('unit*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
-            <svg class="w-4 h-4 {{ request()->is('unit*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M3 3h14a1 1 0 011 1v12a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm2 3v2h10V6H5zm0 4v2h10v-2H5z" />
+            <svg class="w-4 h-4 {{ request()->is('unit*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+              <path d="m4.343 11h-4.343a5.006 5.006 0 0 1 5-5h6v-4.364a1.637 1.637 0 0 1 2.33-1.482l3.2 1.5a1 1 0 0 1 0 1.7l-3.53 1.646v1h6a5.006 5.006 0 0 1 5 5h-4.343a3 3 0 0 1 -2.092-.849l-2.736-2.979a4.074 4.074 0 0 0 -5.687.03l-2.678 2.919a3.017 3.017 0 0 1 -2.121.879zm7.657 8a1 1 0 0 0 -1 1v4h2v-4a1 1 0 0 0 -1-1zm7.657-6h4.343v8a3 3 0 0 1 -3 3h-6v-4a3 3 0 0 0 -6 0v4h-6a3 3 0 0 1 -3-3v-8h4.343a4.994 4.994 0 0 0 3.565-1.495l2.678-2.919a2.07 2.07 0 0 1 2.8-.03l2.738 2.979a4.968 4.968 0 0 0 3.533 1.465zm-13.657 8a1 1 0 0 0 -1-1h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm0-4a1 1 0 0 0 -1-1h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm8-4a2 2 0 1 0 -2 2 2 2 0 0 0 2-2zm7 8a1 1 0 0 0 -1-1h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm-1-5h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2z"/>
             </svg>
             <span>Unit</span>
           </a>
@@ -164,10 +166,8 @@
     const icon = document.getElementById('dropdown-icon');
     if (dropdown.classList.contains('hidden')) {
       dropdown.classList.remove('hidden');
-      icon.classList.add('rotate-180');
     } else {
       dropdown.classList.add('hidden');
-      icon.classList.remove('rotate-180');
     }
   }
 </script>
