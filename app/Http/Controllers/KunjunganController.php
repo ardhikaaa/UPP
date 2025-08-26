@@ -8,6 +8,7 @@ use App\Models\Kunjungan;
 use App\Models\Obat;
 use App\Models\Rombel;
 use App\Models\Siswa;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class KunjunganController extends Controller
@@ -40,34 +41,45 @@ class KunjunganController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    $request->validate([
-        'unit_id'     => 'required|exists:units,id',
-        'kelas_id'    => 'required|exists:kelas,id',
-        'siswa_id'    => 'required|exists:siswas,id',
-        'obat_id'     => 'required|exists:obats,id',
-        'guru_id'     => 'required|exists:gurus,id',
-        'tanggal'     => 'required|date',
-        'diagnosa'    => 'required|string',
-        'jumlah_obat' => 'required|integer'
-    ]);
+    {
+        $request->validate([
+            'unit_id'     => 'required|exists:units,id',
+            'kelas_id'    => 'required|exists:kelas,id',
+            'siswa_id'    => 'required|exists:siswas,id',
+            'obat_id'     => 'required|exists:obats,id',
+            'guru_id'     => 'required|exists:gurus,id',
+            'diagnosa'    => 'required|string',
+            'jumlah_obat' => 'required|integer|min:1'
+        ]);
 
-    $rombel = Rombel::where('unit_id', $request->unit_id)
-        ->where('kelas_id', $request->kelas_id)
-        ->where('siswa_id', $request->siswa_id)
-        ->firstOrFail();
+        $rombel = Rombel::where('unit_id', $request->unit_id)
+            ->where('kelas_id', $request->kelas_id)
+            ->where('siswa_id', $request->siswa_id)
+            ->firstOrFail();
 
-    Kunjungan::create([
-        'rombel_id'   => $rombel->id,
-        'obat_id'     => $request->obat_id,
-        'guru_id'     => $request->guru_id,
-        'tanggal'     => $request->tanggal,
-        'diagnosa'    => $request->diagnosa,
-        'jumlah_obat' => $request->jumlah_obat
-    ]);
+        // ambil obat sesuai pilihan
+        $obat = Obat::findOrFail($request->obat_id);
 
-    return redirect()->route('kunjungan.index')->with('success', 'Data kunjungan berhasil dibuat');
-}
+        // cek stok
+        if ($obat->jumlah < $request->jumlah_obat) {
+            return back()->with('error', 'Stok obat tidak mencukupi!');
+        }
+
+        // kurangi stok
+        $obat->jumlah -= $request->jumlah_obat;
+        $obat->save();
+
+        Kunjungan::create([
+            'rombel_id'   => $rombel->id,
+            'obat_id'     => $request->obat_id,
+            'guru_id'     => $request->guru_id,
+            'tanggal'     => Carbon::now(),
+            'diagnosa'    => $request->diagnosa,
+            'jumlah_obat' => $request->jumlah_obat
+        ]);
+
+        return redirect()->route('kunjungan.index')->with('success', 'Data kunjungan berhasil dibuat');
+    }
 
 
     /**
@@ -108,6 +120,25 @@ class KunjunganController extends Controller
             ->firstOrFail();
 
         $kunjungan = Kunjungan::findOrFail($id);
+
+        // Ambil obat lama
+        $obatLama = Obat::findOrFail($kunjungan->obat_id);
+        // Kembalikan stok lama
+        $obatLama->jumlah += $kunjungan->jumlah_obat;
+        $obatLama->save();
+
+        // Ambil obat baru
+        $obatBaru = Obat::findOrFail($request->obat_id);
+
+        // Cek stok obat baru
+        if ($obatBaru->jumlah < $request->jumlah_obat) {
+            return back()->with('error', 'Stok obat tidak mencukupi!');
+        }
+
+        // Kurangi stok obat baru
+        $obatBaru->jumlah -= $request->jumlah_obat;
+        $obatBaru->save();
+
         $kunjungan->update([
             'rombel_id'   => $rombel->id,
             'obat_id'     => $request->obat_id,

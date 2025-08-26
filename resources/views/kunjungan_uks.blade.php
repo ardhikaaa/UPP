@@ -57,31 +57,32 @@
             <table class="w-full text-sm text-left text-[#142143]">
                 <thead class="text-xs uppercase bg-[#0072BC] text-white">
                     <tr>
-                        <th scope="col" class="px-6 py-4 font-medium">No</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Unit</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Kelas</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Nama Siswa</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Diagnosa</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Obat</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Jumlah</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Guru</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Tanggal</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Aksi</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Unit/Kelas</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Nama Siswa</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Diagnosa</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Obat</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Jumlah</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Guru</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Tanggal</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#142143]/20">
                     @foreach ($kunjungan as $item)
                     <tr class="hover:bg-[#142143]/5 transition duration-200">
                         <td class="px-6 py-4 font-medium text-[#142143]">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $item->rombel->unit->unit }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $item->rombel->kelas->kelas }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $item->rombel->siswa->nama_siswa }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $item->diagnosa }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $item->obat->nama_obat }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $item->jumlah_obat }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $item->guru->nama }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $item->tanggal }}</td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="font-medium text-[#142143]">{{ $item->rombel->unit->unit }}</div>
+                        <div class="text-sm text-gray-500">{{ $item->rombel->kelas->kelas }}</div>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->rombel->siswa->nama_siswa }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->diagnosa }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->obat->nama_obat }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->jumlah_obat }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->guru->nama }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('l, d F Y') }}</td>
+                        <td class="px-6 py-4 flex justify-center">
                             <div class="flex items-center space-x-2">
                                 <button 
                                     class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-obat"
@@ -204,12 +205,12 @@
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-medium text-[#142143]">Jumlah Obat</label>
-                        <input type="text" name="jumlah_obat" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" required>
+                        <input type="number" name="jumlah_obat" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" required>
                     </div>
-                    <div>
+                    {{-- <div>
                         <label class="block mb-2 text-sm font-medium text-[#142143]">Tanggal</label>
                         <input type="date" name="tanggal" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
-                    </div>
+                    </div> --}}
                 <!-- Modal footer -->
                 <div class="flex items-center p-4 md:p-5 border-t border-[#142143]/20 rounded-b">
                     <button type="submit" class="text-white bg-[#1a5d94] hover:bg-[#142143] focus:ring-4 focus:outline-none focus:ring-[#1a5d94]/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Simpan</button>
