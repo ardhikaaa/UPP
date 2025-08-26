@@ -28,7 +28,7 @@
         </svg>
       </button>
       <!-- Supported by text -->
-    <div class="text-center mb-6 mt-2">
+    <div class="mb-6 mt-2">
       <p class="text-xs text-gray-400">Support by SMK Informatika Pesat</p>
     </div>
     </div>
@@ -84,12 +84,12 @@
           <div id="master-data-dropdown" 
           class="dropdown-menu mt-1 ml-4 space-y-1 
           {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? '' : 'hidden' }}">
-          <a href="/rombel" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-            {{ request()->is('rombel*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
-            <svg class="w-4 h-4 {{ request()->is('rombel*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
-              <path d="m18.5,16c-2.206,0-4-1.794-4-4s1.794-4,4-4,4,1.794,4,4-1.794,4-4,4Zm-6.5-8c-2.206,0-4-1.794-4-4S9.794,0,12,0s4,1.794,4,4-1.794,4-4,4Zm-6.5,8c-2.206,0-4-1.794-4-4s1.794-4,4-4,4,1.794,4,4-1.794,4-4,4Zm5.5,8v-3c0-1.629-1.3-2.947-2.918-2.992l-2.582,2.992-2.621-2.988c-1.6.065-2.879,1.372-2.879,2.988v3m24,0v-3c0-1.629-1.3-2.947-2.918-2.992l-2.582,2.992-2.621-2.988c-1.6.065-2.879,1.372-2.879,2.988v3"/>
+           <a href="/unit" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+            {{ request()->is('unit*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('unit*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+              <path d="m4.343 11h-4.343a5.006 5.006 0 0 1 5-5h6v-4.364a1.637 1.637 0 0 1 2.33-1.482l3.2 1.5a1 1 0 0 1 0 1.7l-3.53 1.646v1h6a5.006 5.006 0 0 1 5 5h-4.343a3 3 0 0 1 -2.092-.849l-2.736-2.979a4.074 4.074 0 0 0 -5.687.03l-2.678 2.919a3.017 3.017 0 0 1 -2.121.879zm7.657 8a1 1 0 0 0 -1 1v4h2v-4a1 1 0 0 0 -1-1zm7.657-6h4.343v8a3 3 0 0 1 -3 3h-6v-4a3 3 0 0 0 -6 0v4h-6a3 3 0 0 1 -3-3v-8h4.343a4.994 4.994 0 0 0 3.565-1.495l2.678-2.919a2.07 2.07 0 0 1 2.8-.03l2.738 2.979a4.968 4.968 0 0 0 3.533 1.465zm-13.657 8a1 1 0 0 0 -1-1h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm0-4a1 1 0 0 0 -1-1h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm8-4a2 2 0 1 0 -2 2 2 2 0 0 0 2-2zm7 8a1 1 0 0 0 -1-1h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm-1-5h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2z"/>
             </svg>
-            <span>Rombel</span>
+            <span>Unit</span>
           </a>
           <a href="/siswa" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
             {{ request()->is('siswa*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
@@ -105,12 +105,13 @@
             </svg>
             <span>Kelas</span>
           </a>
-          <a href="/unit" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-            {{ request()->is('unit*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
-            <svg class="w-4 h-4 {{ request()->is('unit*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
-              <path d="m4.343 11h-4.343a5.006 5.006 0 0 1 5-5h6v-4.364a1.637 1.637 0 0 1 2.33-1.482l3.2 1.5a1 1 0 0 1 0 1.7l-3.53 1.646v1h6a5.006 5.006 0 0 1 5 5h-4.343a3 3 0 0 1 -2.092-.849l-2.736-2.979a4.074 4.074 0 0 0 -5.687.03l-2.678 2.919a3.017 3.017 0 0 1 -2.121.879zm7.657 8a1 1 0 0 0 -1 1v4h2v-4a1 1 0 0 0 -1-1zm7.657-6h4.343v8a3 3 0 0 1 -3 3h-6v-4a3 3 0 0 0 -6 0v4h-6a3 3 0 0 1 -3-3v-8h4.343a4.994 4.994 0 0 0 3.565-1.495l2.678-2.919a2.07 2.07 0 0 1 2.8-.03l2.738 2.979a4.968 4.968 0 0 0 3.533 1.465zm-13.657 8a1 1 0 0 0 -1-1h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm0-4a1 1 0 0 0 -1-1h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm8-4a2 2 0 1 0 -2 2 2 2 0 0 0 2-2zm7 8a1 1 0 0 0 -1-1h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 1-1zm-1-5h-1a1 1 0 0 0 0 2h1a1 1 0 0 0 0-2z"/>
+          
+          <a href="/rombel" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+            {{ request()->is('rombel*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('rombel*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+              <path d="m18.5,16c-2.206,0-4-1.794-4-4s1.794-4,4-4,4,1.794,4,4-1.794,4-4,4Zm-6.5-8c-2.206,0-4-1.794-4-4S9.794,0,12,0s4,1.794,4,4-1.794,4-4,4Zm-6.5,8c-2.206,0-4-1.794-4-4s1.794-4,4-4,4,1.794,4,4-1.794,4-4,4Zm5.5,8v-3c0-1.629-1.3-2.947-2.918-2.992l-2.582,2.992-2.621-2.988c-1.6.065-2.879,1.372-2.879,2.988v3m24,0v-3c0-1.629-1.3-2.947-2.918-2.992l-2.582,2.992-2.621-2.988c-1.6.065-2.879,1.372-2.879,2.988v3"/>
             </svg>
-            <span>Unit</span>
+            <span>Rombel</span>
           </a>
         </div>
       </div>

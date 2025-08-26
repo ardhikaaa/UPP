@@ -57,17 +57,17 @@
             <table class="w-full text-sm text-left text-[#142143]">
                 <thead class="text-xs uppercase bg-[#0072BC] text-white">
                     <tr>
-                        <th scope="col" class="px-6 py-4 font-medium">No</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Unit</th>
-                        <th scope="col" class="px-6 py-4 font-medium">Aksi</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Unit</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#142143]/20">
                     @foreach ($units as $unit)
                     <tr class="hover:bg-[#142143]/5 transition duration-200">
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $unit->unit }}</td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $loop->iteration }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $unit->unit }}</td>
+                        <td class="px-6 py-4 flex justify-center">
                             <div class="flex items-center space-x-2">
                                 <button 
                                     class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-unit"
