@@ -1,26 +1,13 @@
 <x-guest-layout>
-    <div class="w-full max-w-sm mx-auto bg-white/30 backdrop-blur-sm rounded-2xl shadow-lg ml-6 px-8 py-8 relative">
+    <div class="w-full max-w-sm mx-auto bg-white/30 backdrop-blur-sm rounded-2xl shadow-2xl ml-6 px-8 py-8 relative">
         <img src="{{ asset('images/logo-uks.png') }}" alt="UKS Logo" class="w-16 mx-auto mb-2" />
 
         <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Sign Up</h2>
-
-        {{-- Sosial login --}}
-        <div class="flex justify-between gap-4 mb-4">
-            <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-black py-2 rounded-lg flex items-center justify-center gap-2">
-                <i class="fab fa-google text-red-600"></i> Google
-            </button>
-            <button class="flex-1 bg-gray-200 hover:bg-gray-300 text-black py-2 rounded-lg flex items-center justify-center gap-2">
-                <i class="fab fa-facebook-f text-blue-600"></i> Facebook
-            </button>
-        </div>
-
-        <p class="text-center text-sm text-black mb-3">Or</p>
 
         {{-- Register form --}}
         <form method="POST" action="{{ route('register') }}">
             @csrf
 
-            <div class="flex gap-6">
             {{-- Full Name --}}
             <div class="mb-2">
                 <label class="block text-sm text-gray-800">Full Name</label>
@@ -39,7 +26,6 @@
                 @error('username')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                 @enderror
-            </div>
             </div>
             {{-- Email --}}
             <div class="mb-2">
