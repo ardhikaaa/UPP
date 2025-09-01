@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Guru;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 
 class GuruController extends Controller
@@ -10,10 +11,11 @@ class GuruController extends Controller
     /**
      * Display a listing of the resource.
      */
-public function index()
+    public function index()
 {
-    $gurus = Guru::all();
-    return view('guru', compact('gurus'));
+    $gurus = Guru::with('unit')->get();
+    $units = Unit::all();
+    return view('guru', compact('gurus', 'units'));
 }
 
 
@@ -35,6 +37,7 @@ public function index()
         $request->validate([
             'nama' => 'required|string|max:255',
             'mapel' => 'required|string|max:255',
+            'unit_id' => 'required|exists:units,id',
         ]);
 
         Guru::create($request->all());
@@ -65,6 +68,7 @@ public function index()
         $request->validate([
             'nama' => 'required|string|max:255',
             'mapel' => 'required|string|max:255',
+            'unit_id' => 'required|exists:units,id',
         ]);
 
         $guru->update($request->all());

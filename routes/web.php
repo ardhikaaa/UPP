@@ -29,6 +29,7 @@ Route::resource('kunjungan', KunjunganController::class)->middleware(['auth', 'v
 // routes/web.php
 Route::get('/get-kelas/{unit_id}', [KunjunganController::class, 'getKelas']);
 Route::get('/get-siswa/{unit_id}/{kelas_id}', [KunjunganController::class, 'getSiswa']);
+Route::get('/get-guru/{unit_id}', [KunjunganController::class, 'getGuru']);
 
 
 

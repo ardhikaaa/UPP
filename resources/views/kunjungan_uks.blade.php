@@ -78,7 +78,7 @@
                         </td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->rombel->siswa->nama_siswa }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->diagnosa }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->obat->nama_obat }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->obat ? $item->obat->nama_obat : 'N/A' }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->jumlah_obat }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->guru->nama }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('l, d F Y') }}</td>
@@ -91,7 +91,7 @@
                                     data-kelas-id   ="{{ $item->rombel->kelas->id }}"
                                     data-siswa-id   ="{{ $item->rombel->siswa->id }}"
                                     data-diagnosa   ="{{ $item->diagnosa }}"
-                                    data-obat-id    ="{{ $item->obat->id }}"
+                                    data-obat-id    ="{{ $item->obat ? $item->obat->id : '' }}"
                                     data-jumlah     ="{{ $item->jumlah_obat }}"
                                     data-guru-id    ="{{ $item->guru->id }}"
                                     data-tanggal    ="{{ $item->tanggal }}"
@@ -194,9 +194,6 @@
                         <label for="guru_id" class="block mb-2 text-sm font-medium text-[#142143]">Guru</label>
                         <select name="guru_id" id="guru_id" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
                             <option value="">-- Pilih Guru --</option>
-                            @foreach ($guru as $g)
-                                <option value="{{ $g->id }}">{{ $g->nama }}</option>
-                            @endforeach
                         </select>
                     </div>
                     <div>
@@ -280,9 +277,6 @@
                         <label for="edit-guru_id" class="block mb-2 text-sm font-medium text-[#142143]">Guru</label>
                         <select name="guru_id" id="edit-guru_id" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
                             <option value="">-- Pilih Guru --</option>
-                            @foreach ($guru as $g)
-                                <option value="{{ $g->id }}">{{ $g->nama }}</option>
-                            @endforeach
                         </select>
                     </div>
                     <div>
@@ -371,6 +365,25 @@ document.addEventListener('DOMContentLoaded', function () {
                                 });
                         }
                     });
+
+                // Load guru for the selected unit
+                const editGuruSelect = document.getElementById('edit-guru_id');
+                fetch(`/get-guru/${unitId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        editGuruSelect.innerHTML = '<option value="">-- Pilih Guru --</option>';
+                        data.forEach(guru => {
+                            const option = document.createElement('option');
+                            option.value = guru.id;
+                            option.textContent = guru.nama;
+                            editGuruSelect.appendChild(option);
+                        });
+                        editGuruSelect.value = guruId;
+                    })
+                    .catch(error => {
+                        console.error('Error loading guru:', error);
+                        editGuruSelect.innerHTML = '<option value="">Error loading guru</option>';
+                    });
             }
         });
     });
@@ -379,11 +392,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const unitSelect = document.getElementById('unit_id');
     const kelasSelect = document.getElementById('kelas_id');
     const siswaSelect = document.getElementById('siswa_id');
+    const guruSelect = document.getElementById('guru_id');
 
     // Dynamic dropdown functionality for edit modal
     const editUnitSelect = document.getElementById('edit-unit_id');
     const editKelasSelect = document.getElementById('edit-kelas_id');
     const editSiswaSelect = document.getElementById('edit-siswa_id');
+    const editGuruSelect = document.getElementById('edit-guru_id');
 
     // When unit changes, load kelas (add modal)
     if (unitSelect) {
@@ -391,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const unitId = this.value;
             kelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
             siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+            guruSelect.innerHTML = '<option value="">-- Pilih Guru --</option>';
 
             if (unitId) {
                 fetch(`/get-kelas/${unitId}`)
@@ -406,6 +422,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     .catch(error => {
                         console.error('Error loading kelas:', error);
                         kelasSelect.innerHTML = '<option value="">Error loading kelas</option>';
+                    });
+
+                // Load guru for the selected unit
+                fetch(`/get-guru/${unitId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        guruSelect.innerHTML = '<option value="">-- Pilih Guru --</option>';
+                        data.forEach(guru => {
+                            const option = document.createElement('option');
+                            option.value = guru.id;
+                            option.textContent = guru.nama;
+                            guruSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading guru:', error);
+                        guruSelect.innerHTML = '<option value="">Error loading guru</option>';
                     });
             }
         });
@@ -443,6 +476,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const unitId = this.value;
             editKelasSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
             editSiswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+            editGuruSelect.innerHTML = '<option value="">-- Pilih Guru --</option>';
 
             if (unitId) {
                 fetch(`/get-kelas/${unitId}`)
@@ -458,6 +492,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     .catch(error => {
                         console.error('Error loading kelas:', error);
                         editKelasSelect.innerHTML = '<option value="">Error loading kelas</option>';
+                    });
+
+                // Load guru for the selected unit
+                fetch(`/get-guru/${unitId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        editGuruSelect.innerHTML = '<option value="">-- Pilih Guru --</option>';
+                        data.forEach(guru => {
+                            const option = document.createElement('option');
+                            option.value = guru.id;
+                            option.textContent = guru.nama;
+                            editGuruSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error loading guru:', error);
+                        editGuruSelect.innerHTML = '<option value="">Error loading guru</option>';
                     });
             }
         });

@@ -60,6 +60,7 @@
                         <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Nama Guru</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Mata Pelajaran</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Unit</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -69,13 +70,15 @@
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $loop->iteration }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $guru->nama }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $guru->mapel }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $guru->unit->unit ?? '-' }}</td>
                         <td class="px-6 py-4 flex justify-center">
                             <div class="flex items-center space-x-2">
-                                <button 
+                                <button
                                     class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-guru"
                                     data-id="{{ $guru->id }}"
                                     data-nama="{{ $guru->nama }}"
                                     data-mapel="{{ $guru->mapel }}"
+                                    data-unit-id="{{ $guru->unit_id }}"
                                     data-modal-target="edit-guru-modal" data-modal-toggle="edit-guru-modal"
                                 >
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -143,6 +146,15 @@
                             <label class="block mb-2 text-sm font-medium text-[#142143]">Mata Pelajaran</label>
                             <input type="text" name="mapel" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan mata pelajaran" required>
                         </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-[#142143]">Unit</label>
+                            <select name="unit_id" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
+                                <option value="">Pilih Unit</option>
+                                @foreach($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="flex items-center p-4 md:p-5 border-t border-[#142143]/20 rounded-b">
                         <button type="submit" class="text-white bg-[#1a5d94] hover:bg-[#142143] focus:ring-4 focus:outline-none focus:ring-[#1a5d94]/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Simpan</button>
@@ -180,6 +192,15 @@
                             <label class="block mb-2 text-sm font-medium text-[#142143]">Mata Pelajaran</label>
                             <input type="text" name="mapel" id="edit-guru-mapel" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
                         </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-[#142143]">Unit</label>
+                            <select name="unit_id" id="edit-guru-unit-id" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
+                                <option value="">Pilih Unit</option>
+                                @foreach($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="flex items-center p-4 md:p-5 border-t border-[#142143]/20 rounded-b">
                         <button type="submit" class="text-white bg-[#1a5d94] hover:bg-[#142143] focus:ring-4 focus:outline-none focus:ring-[#1a5d94]/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Update</button>
@@ -198,10 +219,12 @@
                 const id = this.getAttribute('data-id');
                 const nama = this.getAttribute('data-nama');
                 const mapel = this.getAttribute('data-mapel');
+                const unitId = this.getAttribute('data-unit-id');
 
                 document.getElementById('edit-guru-id').value = id;
                 document.getElementById('edit-guru-nama').value = nama;
                 document.getElementById('edit-guru-mapel').value = mapel;
+                document.getElementById('edit-guru-unit-id').value = unitId;
 
                 document.getElementById('form-edit-guru').action = `/guru/${id}`;
             });

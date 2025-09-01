@@ -47,29 +47,13 @@
         <span class="hidden sm:inline ">Data Kunjungan UKS</span>
         <span class="sm:hidden">Dashboard</span>
       </a>
-      <a href="/obat" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-    {{ request()->is('obat') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('obat*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
-          <path d="m0,11v-5C0,2.692,2.692,0,6,0s6,2.692,6,6v5H0Zm12.258,10.328c-.787-1.075-1.258-2.396-1.258-3.828,0-3.584,2.916-6.5,6.5-6.5,1.432,0,2.752.471,3.828,1.258l-9.069,9.069Zm1.414,1.414c1.075.787,2.396,1.258,3.828,1.258,3.584,0,6.5-2.916,6.5-6.5,0-1.432-.471-2.752-1.258-3.828l-9.069,9.069Zm-4.672-5.242c0-1.655.48-3.194,1.298-4.5H0v5c0,3.308,2.692,6,6,6,1.719,0,3.268-.731,4.363-1.894-.859-1.328-1.363-2.907-1.363-4.606Z"/>
-        </svg>
-        <span class="hidden sm:inline">Data Obat</span>
-        <span class="sm:hidden">Obat</span>
-      </a>
-      <a href="/guru" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-    {{ request()->is('guru') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
-        <svg class="w-5 h-5 {{ request()->is('guru*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
-          <path d="m14,23c0,.552-.448,1-1,1H1c-.552,0-1-.448-1-1,0-3.866,3.134-7,7-7s7,3.134,7,7ZM7,6c-2.209,0-4,1.791-4,4s1.791,4,4,4,4-1.791,4-4-1.791-4-4-4Zm17-1v8c0,2.761-2.239,5-5,5h-4.526c-.945-1.406-2.275-2.533-3.839-3.227,1.437-1.096,2.365-2.826,2.365-4.773,0-3.314-2.686-6-6-6-1.084,0-2.102.288-2.979.791.112-2.658,2.294-4.791,4.979-4.791h10c2.761,0,5,2.239,5,5Zm-4,10c0-.553-.448-1-1-1h-3.5c-.552,0-1,.447-1,1s.448,1,1,1h3.5c.552,0,1-.447,1-1Z"/>
-        </svg>
-        <span class="hidden sm:inline">Data Guru</span>
-        <span class="sm:hidden">Guru</span>
-      </a>
 
       <!-- Dropdown Menu for Rombel, Siswa, Kelas, Unit -->
       <div class="relative">
         <button type="button" class="dropdown-toggle flex items-center justify-between w-full gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
           {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-400 hover:text-yellow-600 hover:bg-gray-50' }}"
           onclick="toggleDropdown('master-data-dropdown')">
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-4">
             <svg id="dropdown-icon" class="w-4 h-4 {{ request()->is('rombel*') || request()->is('siswa*') || request()->is('kelas*') || request()->is('unit*') ? 'text-yellow-600' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
              <path d="m15.5,23c0,.552-.448,1-1,1h-5c-.552,0-1-.448-1-1,0-1.5,1.737-3,3.5-3s3.5,1.5,3.5,3Zm-12.269-4c1.381,0,2.5-1.119,2.5-2.5s-1.119-2.5-2.5-2.5-2.5,1.119-2.5,2.5,1.119,2.5,2.5,2.5Zm8.769,0c1.381,0,2.5-1.119,2.5-2.5s-1.119-2.5-2.5-2.5-2.5,1.119-2.5,2.5,1.119,2.5,2.5,2.5ZM19,0H5C2.239,0,0,2.239,0,5v8.381c.819-.848,1.962-1.381,3.231-1.381,2.143,0,3.934,1.508,4.385,3.517.451-2.009,2.242-3.517,4.385-3.517s3.934,1.508,4.385,3.517c.451-2.009,2.242-3.517,4.385-3.517,1.269,0,2.412.533,3.231,1.381V5c0-2.761-2.239-5-5-5Zm1.769,19c1.381,0,2.5-1.119,2.5-2.5s-1.119-2.5-2.5-2.5-2.5,1.119-2.5,2.5,1.119,2.5,2.5,2.5Zm-.019,1c-1.667,0-3.183,1.539-3.25,3,0,.552.448,1,1,1h4.5c.552,0,1-.448,1-1-.079-1.458-1.585-3-3.25-3Zm-17.5,0c-1.667,0-3.183,1.539-3.25,3,0,.552.448,1,1,1h4.5c.552,0,1-.448,1-1-.079-1.458-1.585-3-3.25-3Z"/>
           </svg>
@@ -115,6 +99,25 @@
           </a>
         </div>
       </div>
+
+       <a href="/guru" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+    {{ request()->is('guru') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+        <svg class="w-5 h-5 {{ request()->is('guru*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+          <path d="m14,23c0,.552-.448,1-1,1H1c-.552,0-1-.448-1-1,0-3.866,3.134-7,7-7s7,3.134,7,7ZM7,6c-2.209,0-4,1.791-4,4s1.791,4,4,4,4-1.791,4-4-1.791-4-4-4Zm17-1v8c0,2.761-2.239,5-5,5h-4.526c-.945-1.406-2.275-2.533-3.839-3.227,1.437-1.096,2.365-2.826,2.365-4.773,0-3.314-2.686-6-6-6-1.084,0-2.102.288-2.979.791.112-2.658,2.294-4.791,4.979-4.791h10c2.761,0,5,2.239,5,5Zm-4,10c0-.553-.448-1-1-1h-3.5c-.552,0-1,.447-1,1s.448,1,1,1h3.5c.552,0,1-.447,1-1Z"/>
+        </svg>
+        <span class="hidden sm:inline">Data Guru</span>
+        <span class="sm:hidden">Guru</span>
+      </a>
+      
+      <a href="/obat" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+    {{ request()->is('obat') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+        <svg class="w-5 h-5 {{ request()->is('obat*') ? 'text-yellow-500' : 'text-gray-400' }}" fill="currentColor" viewBox="0 0 24 24">
+          <path d="m0,11v-5C0,2.692,2.692,0,6,0s6,2.692,6,6v5H0Zm12.258,10.328c-.787-1.075-1.258-2.396-1.258-3.828,0-3.584,2.916-6.5,6.5-6.5,1.432,0,2.752.471,3.828,1.258l-9.069,9.069Zm1.414,1.414c1.075.787,2.396,1.258,3.828,1.258,3.584,0,6.5-2.916,6.5-6.5,0-1.432-.471-2.752-1.258-3.828l-9.069,9.069Zm-4.672-5.242c0-1.655.48-3.194,1.298-4.5H0v5c0,3.308,2.692,6,6,6,1.719,0,3.268-.731,4.363-1.894-.859-1.328-1.363-2.907-1.363-4.606Z"/>
+        </svg>
+        <span class="hidden sm:inline">Data Obat</span>
+        <span class="sm:hidden">Obat</span>
+      </a>
+     
     </nav>
   </div>
 

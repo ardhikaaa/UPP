@@ -183,10 +183,22 @@ class KunjunganController extends Controller
                 $query->where('unit_id', $unit_id)
                       ->where('kelas_id', $kelas_id);
             })->get(['id', 'nama_siswa']);
-            
+
             return response()->json($siswa);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to load siswa'], 500);
+        }
+    }
+
+    public function getGuru($unit_id)
+    {
+        try {
+            // Get guru that belong to the specified unit
+            $guru = Guru::where('unit_id', $unit_id)->get(['id', 'nama']);
+
+            return response()->json($guru);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to load guru'], 500);
         }
     }
 }
