@@ -49,7 +49,10 @@ class KunjunganController extends Controller
             'obat_id'     => 'required|exists:obats,id',
             'guru_id'     => 'required|exists:gurus,id',
             'diagnosa'    => 'required|string',
-            'jumlah_obat' => 'required|integer|min:1'
+            'jumlah_obat' => 'required|integer|min:1',
+            'pengecekan'  => 'required|string|max:255',
+            'anamnesa'    => 'required|string',
+            'tindakan'    => 'required|string',
         ]);
 
         $rombel = Rombel::where('unit_id', $request->unit_id)
@@ -75,7 +78,10 @@ class KunjunganController extends Controller
             'guru_id'     => $request->guru_id,
             'tanggal'     => Carbon::now(),
             'diagnosa'    => $request->diagnosa,
-            'jumlah_obat' => $request->jumlah_obat
+            'jumlah_obat' => $request->jumlah_obat,
+            'pengecekan'  => $request->pengecekan,
+            'anamnesa'    => $request->anamnesa,
+            'tindakan'    => $request->tindakan,
         ]);
 
         return redirect()->route('kunjungan.index')->with('success', 'Data kunjungan berhasil dibuat');
@@ -111,7 +117,10 @@ class KunjunganController extends Controller
             'guru_id'     => 'required|exists:gurus,id',
             'tanggal'     => 'required|date',
             'diagnosa'    => 'required|string',
-            'jumlah_obat' => 'required|integer'
+            'jumlah_obat' => 'required|integer|min:1',
+            'pengecekan'  => 'required|string|max:255',
+            'anamnesa'    => 'required|string',
+            'tindakan'    => 'required|string',
         ]);
 
         $rombel = Rombel::where('unit_id', $request->unit_id)
@@ -145,7 +154,10 @@ class KunjunganController extends Controller
             'guru_id'     => $request->guru_id,
             'tanggal'     => $request->tanggal,
             'diagnosa'    => $request->diagnosa,
-            'jumlah_obat' => $request->jumlah_obat
+            'jumlah_obat' => $request->jumlah_obat,
+            'pengecekan'  => $request->pengecekan,
+            'anamnesa'    => $request->anamnesa,
+            'tindakan'    => $request->tindakan,
         ]);
 
         return redirect()->route('kunjungan.index')->with('success', 'Data kunjungan berhasil diperbarui');

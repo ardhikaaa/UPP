@@ -14,7 +14,10 @@ class Kunjungan extends Model
         'obat_id',
         'tanggal',
         'guru_id',
-        'jumlah_obat'
+        'jumlah_obat',
+        'pengecekan',
+        'anamnesa',
+        'tindakan',
     ];
 
     public function rombel()

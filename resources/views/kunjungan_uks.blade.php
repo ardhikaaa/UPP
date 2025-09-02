@@ -25,7 +25,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" placeholder="Cari info kunjungan..." 
+                        <input type="text" id="searchInput" name="searchInput" placeholder="Cari info kunjungan..." 
                                class="block w-full pl-10 pr-3 py-2 border border-[#142143]/30 rounded-lg leading-5 bg-white text-[#142143] placeholder-[#142143]/60 focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]">
                     </div>
                 </div>
@@ -54,13 +54,16 @@
                 </div>
             @endif
 
-            <table class="w-full text-sm text-left text-[#142143]">
+            <table class="w-full text-sm text-left text-[#142143]" id="Table">
                 <thead class="text-xs uppercase bg-[#0072BC] text-white">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Unit/Kelas</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Nama Siswa</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Pengecekan</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Anamnesa</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Diagnosa</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Tindakan</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Obat</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Jumlah</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Guru</th>
@@ -68,7 +71,7 @@
                         <th scope="col" class="px-6 py-4 font-medium text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-[#142143]/20">
+                <tbody class="divide-y divide-[#142143]/20" id="#Table">
                     @foreach ($kunjungan as $item)
                     <tr class="hover:bg-[#142143]/5 transition duration-200">
                         <td class="px-6 py-4 font-medium text-[#142143]">{{ $loop->iteration }}</td>
@@ -77,7 +80,10 @@
                         <div class="text-sm text-gray-500">{{ $item->rombel->kelas->kelas }}</div>
                         </td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->rombel->siswa->nama_siswa }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->pengecekan }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->anamnesa }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->diagnosa }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->tindakan }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->obat ? $item->obat->nama_obat : 'N/A' }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->jumlah_obat }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->guru->nama }}</td>
@@ -90,7 +96,10 @@
                                     data-unit-id    ="{{ $item->rombel->unit->id }}"
                                     data-kelas-id   ="{{ $item->rombel->kelas->id }}"
                                     data-siswa-id   ="{{ $item->rombel->siswa->id }}"
+                                    data-pengecekan ="{{ $item->pengecekan }}"
+                                    data-anamnesa   ="{{ $item->anamnesa }}"
                                     data-diagnosa   ="{{ $item->diagnosa }}"
+                                    data-tindakan   ="{{ $item->tindakan }}"
                                     data-obat-id    ="{{ $item->obat ? $item->obat->id : '' }}"
                                     data-jumlah     ="{{ $item->jumlah_obat }}"
                                     data-guru-id    ="{{ $item->guru->id }}"
@@ -197,6 +206,18 @@
                         </select>
                     </div>
                     <div>
+                        <label class="block mb-2 text-sm font-medium text-[#142143]">Pengecekan</label>
+                        <input type="text" name="pengecekan" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan diagnosa" required>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-[#142143]">Anamnesa</label>
+                        <textarea name="anamnesa" id="anamnesa" cols="30" rows="5" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan anamnesa" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-[#142143]">Tindakan</label>
+                        <textarea name="tindakan" id="tindakan" cols="30" rows="5" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan tindakan" required></textarea>
+                    </div> 
+                    <div>
                         <label class="block mb-2 text-sm font-medium text-[#142143]">Diagnosa</label>
                         <input type="text" name="diagnosa" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan diagnosa" required>
                     </div>
@@ -204,10 +225,6 @@
                         <label class="block mb-2 text-sm font-medium text-[#142143]">Jumlah Obat</label>
                         <input type="number" name="jumlah_obat" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" required>
                     </div>
-                    {{-- <div>
-                        <label class="block mb-2 text-sm font-medium text-[#142143]">Tanggal</label>
-                        <input type="date" name="tanggal" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
-                    </div> --}}
                 <!-- Modal footer -->
                 <div class="flex items-center p-4 md:p-5 border-t border-[#142143]/20 rounded-b">
                     <button type="submit" class="text-white bg-[#1a5d94] hover:bg-[#142143] focus:ring-4 focus:outline-none focus:ring-[#1a5d94]/30 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Simpan</button>
@@ -309,22 +326,28 @@ document.addEventListener('DOMContentLoaded', function () {
     // Handle edit button clicks
     document.querySelectorAll('.btn-edit-obat').forEach(function (btn) {
         btn.addEventListener('click', function () {
-            const id = this.getAttribute('data-id');
-            const unitId = this.getAttribute('data-unit-id');
-            const kelasId = this.getAttribute('data-kelas-id');
-            const siswaId = this.getAttribute('data-siswa-id');
-            const diagnosa = this.getAttribute('data-diagnosa');
-            const obatId = this.getAttribute('data-obat-id');
-            const jumlah = this.getAttribute('data-jumlah');
-            const guruId = this.getAttribute('data-guru-id');
-            const tanggal = this.getAttribute('data-tanggal');
+            const id            = this.getAttribute('data-id');
+            const unitId        = this.getAttribute('data-unit-id');
+            const kelasId       = this.getAttribute('data-kelas-id');
+            const siswaId       = this.getAttribute('data-siswa-id');
+            const pengecekan    = this.getAttribute('data-pengecekan');
+            const anamnesa      = this.getAttribute('data-anamnesa');
+            const diagnosa      = this.getAttribute('data-diagnosa');
+            const tindakan      = this.getAttribute('data-tindakan');
+            const obatId        = this.getAttribute('data-obat-id');
+            const jumlah        = this.getAttribute('data-jumlah');
+            const guruId        = this.getAttribute('data-guru-id');
+            const tanggal       = this.getAttribute('data-tanggal');
 
             // Set form action
             document.getElementById('form-edit-kunjungan').action = `/kunjungan/${id}`;
             
             // Set form values
             document.getElementById('edit-id').value = id;
+            document.getElementById('edit-pengecekan').value = pengecekan;
+            document.getElementById('edit-anamnesa').value = anamnesa;
             document.getElementById('edit-diagnosa').value = diagnosa;
+            document.getElementById('edit-tindakan').value = tindakan;
             document.getElementById('edit-jumlah_obat').value = jumlah;
             document.getElementById('edit-tanggal').value = tanggal;
             document.getElementById('edit-obat_id').value = obatId;
@@ -539,5 +562,36 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    // Enhanced search functionality
+    document.getElementById('searchInput').addEventListener('keyup', function () {
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#Table tbody tr');
+    let visibleCount = 0;
+
+    rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        let found = false;
+
+        // Search in name, degree, and subject columns
+        for (let i = 1; i < cells.length - 1; i++) {
+        if (cells[i].textContent.toLowerCase().includes(searchValue)) {
+            found = true;
+            break;
+        }
+        }
+
+        if (found) {
+        row.style.display = '';
+        row.style.animation = `fadeIn 0.3s ease ${index * 0.1}s both`;
+        visibleCount++;
+        } else {
+        row.style.display = 'none';
+        }
+    });
+
+    // Update pagination info
+    updatePaginationInfo(visibleCount);
+    });
 });
 </script>
