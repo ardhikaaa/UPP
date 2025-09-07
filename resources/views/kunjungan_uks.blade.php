@@ -65,7 +65,6 @@
                         <th scope="col" class="px-6 py-4 font-medium text-center">Diagnosa</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Tindakan</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Obat</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Jumlah</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Guru</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Tanggal</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Aksi</th>
@@ -84,8 +83,15 @@
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->anamnesa }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->diagnosa }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->tindakan }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->obat ? $item->obat->nama_obat : 'N/A' }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->jumlah_obat }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">
+                            @if($item->obats && $item->obats->count() > 0)
+                                @foreach($item->obats as $obatItem)
+                                    <div class="text-sm">{{ $obatItem->nama_obat }} ({{ $obatItem->pivot->jumlah_obat }})</div>
+                                @endforeach
+                            @else
+                                N/A
+                            @endif
+                        </td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->guru->nama }}</td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('l, d F Y') }}</td>
                         <td class="px-6 py-4 flex justify-center">
@@ -100,8 +106,9 @@
                                     data-anamnesa   ="{{ $item->anamnesa }}"
                                     data-diagnosa   ="{{ $item->diagnosa }}"
                                     data-tindakan   ="{{ $item->tindakan }}"
-                                    data-obat-id    ="{{ $item->obat ? $item->obat->id : '' }}"
-                                    data-jumlah     ="{{ $item->jumlah_obat }}"
+                                    data-obat-ids   ="{{ $item->obats ? $item->obats->pluck('id')->implode(',') : '' }}"
+                                    data-obat-names ="{{ $item->obats ? $item->obats->pluck('nama_obat')->implode(',') : '' }}"
+                                    data-jumlahs    ="{{ $item->obats ? $item->obats->pluck('pivot.jumlah_obat')->implode(',') : '' }}"
                                     data-guru-id    ="{{ $item->guru->id }}"
                                     data-tanggal    ="{{ $item->tanggal }}"
                                     data-modal-target="edit-kunjungan-modal" data-modal-toggle="edit-kunjungan-modal"
@@ -191,13 +198,19 @@
                         </select>
                     </div>
                     <div>
-                        <label for="obat_id" class="block mb-2 text-sm font-medium text-[#142143]">Obat</label>
-                        <select name="obat_id" id="obat_id" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
-                            <option value="">-- Pilih Obat --</option>
+                        <label class="block mb-2 text-sm font-medium text-[#142143]">Obat</label>
+                        <div class="bg-white border border-[#142143]/30 rounded-lg p-3 max-h-40 overflow-y-auto">
                             @foreach ($obat as $o)
-                                <option value="{{ $o->id }}">{{ $o->nama_obat }}</option>
+                                <div class="flex items-center mb-2">
+                                    <input type="checkbox" name="obat_ids[]" value="{{ $o->id }}" id="obat_{{ $o->id }}" class="obat-checkbox w-4 h-4 text-[#1a5d94] bg-gray-100 border-gray-300 rounded focus:ring-[#1a5d94] focus:ring-2">
+                                    <label for="obat_{{ $o->id }}" class="ml-2 text-sm text-[#142143] cursor-pointer">{{ $o->nama_obat }}</label>
+                                </div>
                             @endforeach
-                        </select>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Pilih satu atau lebih obat</p>
+                    </div>
+                    <div id="jumlah-obat-container">
+                        <!-- Container untuk input jumlah obat akan diisi oleh JavaScript -->
                     </div>
                     <div>
                         <label for="guru_id" class="block mb-2 text-sm font-medium text-[#142143]">Guru</label>
@@ -220,10 +233,6 @@
                     <div>
                         <label class="block mb-2 text-sm font-medium text-[#142143]">Diagnosa</label>
                         <input type="text" name="diagnosa" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan diagnosa" required>
-                    </div>
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-[#142143]">Jumlah Obat</label>
-                        <input type="number" name="jumlah_obat" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" required>
                     </div>
                 <!-- Modal footer -->
                 <div class="flex items-center p-4 md:p-5 border-t border-[#142143]/20 rounded-b">
@@ -282,13 +291,19 @@
                         </select>
                     </div>
                     <div>
-                        <label for="edit-obat_id" class="block mb-2 text-sm font-medium text-[#142143]">Obat</label>
-                        <select name="obat_id" id="edit-obat_id" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
-                            <option value="">-- Pilih Obat --</option>
+                        <label class="block mb-2 text-sm font-medium text-[#142143]">Obat</label>
+                        <div class="bg-white border border-[#142143]/30 rounded-lg p-3 max-h-40 overflow-y-auto">
                             @foreach ($obat as $o)
-                                <option value="{{ $o->id }}">{{ $o->nama_obat }}</option>
+                                <div class="flex items-center mb-2">
+                                    <input type="checkbox" name="obat_ids[]" value="{{ $o->id }}" id="edit_obat_{{ $o->id }}" class="edit-obat-checkbox w-4 h-4 text-[#1a5d94] bg-gray-100 border-gray-300 rounded focus:ring-[#1a5d94] focus:ring-2">
+                                    <label for="edit_obat_{{ $o->id }}" class="ml-2 text-sm text-[#142143] cursor-pointer">{{ $o->nama_obat }}</label>
+                                </div>
                             @endforeach
-                        </select>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Pilih satu atau lebih obat</p>
+                    </div>
+                    <div id="edit-jumlah-obat-container">
+                        <!-- Container untuk input jumlah obat akan diisi oleh JavaScript -->
                     </div>
                     <div>
                         <label for="edit-guru_id" class="block mb-2 text-sm font-medium text-[#142143]">Guru</label>
@@ -297,12 +312,20 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-[#142143]">Diagnosa</label>
-                        <input type="text" name="diagnosa" id="edit-diagnosa" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan diagnosa" required>
+                        <label class="block mb-2 text-sm font-medium text-[#142143]">Pengecekan</label>
+                        <input type="text" name="pengecekan" id="edit-pengecekan" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan pengecekan" required>
                     </div>
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-[#142143]">Jumlah Obat</label>
-                        <input type="text" name="jumlah_obat" id="edit-jumlah_obat" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" required>
+                        <label class="block mb-2 text-sm font-medium text-[#142143]">Anamnesa</label>
+                        <textarea name="anamnesa" id="edit-anamnesa" cols="30" rows="5" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan anamnesa" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-[#142143]">Tindakan</label>
+                        <textarea name="tindakan" id="edit-tindakan" cols="30" rows="5" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan tindakan" required></textarea>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-[#142143]">Diagnosa</label>
+                        <input type="text" name="diagnosa" id="edit-diagnosa" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan diagnosa" required>
                     </div>
                     <div>
                         <label class="block mb-2 text-sm font-medium text-[#142143]">Tanggal</label>
@@ -334,10 +357,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const anamnesa      = this.getAttribute('data-anamnesa');
             const diagnosa      = this.getAttribute('data-diagnosa');
             const tindakan      = this.getAttribute('data-tindakan');
-            const obatId        = this.getAttribute('data-obat-id');
-            const jumlah        = this.getAttribute('data-jumlah');
+            const obatIds       = this.getAttribute('data-obat-ids');
+            const obatNames     = this.getAttribute('data-obat-names');
+            const jumlahs       = this.getAttribute('data-jumlahs');
             const guruId        = this.getAttribute('data-guru-id');
             const tanggal       = this.getAttribute('data-tanggal');
+
+            // Debug: Log the data
+            console.log('Edit data:', {
+                id, unitId, kelasId, siswaId, pengecekan, anamnesa, diagnosa, tindakan,
+                obatIds, obatNames, jumlahs, guruId, tanggal
+            });
 
             // Set form action
             document.getElementById('form-edit-kunjungan').action = `/kunjungan/${id}`;
@@ -348,10 +378,51 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('edit-anamnesa').value = anamnesa;
             document.getElementById('edit-diagnosa').value = diagnosa;
             document.getElementById('edit-tindakan').value = tindakan;
-            document.getElementById('edit-jumlah_obat').value = jumlah;
             document.getElementById('edit-tanggal').value = tanggal;
-            document.getElementById('edit-obat_id').value = obatId;
             document.getElementById('edit-guru_id').value = guruId;
+            
+            // Handle multiple obat selection for edit (checkbox)
+            if (obatIds && obatIds !== '') {
+                const obatIdArray = obatIds.split(',');
+                const obatNameArray = obatNames.split(',');
+                const jumlahArray = jumlahs.split(',');
+                
+                // Uncheck all checkboxes first
+                document.querySelectorAll('.edit-obat-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                // Check selected obat checkboxes
+                obatIdArray.forEach(obatId => {
+                    if (obatId) {
+                        const checkbox = document.getElementById(`edit_obat_${obatId}`);
+                        if (checkbox) {
+                            checkbox.checked = true;
+                        }
+                    }
+                });
+                
+                // Create jumlah input fields
+                const editJumlahContainer = document.getElementById('edit-jumlah-obat-container');
+                editJumlahContainer.innerHTML = '';
+                
+                obatIdArray.forEach((obatId, index) => {
+                    if (obatId) {
+                        const div = document.createElement('div');
+                        div.className = 'mb-2';
+                        div.innerHTML = `
+                            <label class="block mb-1 text-sm font-medium text-[#142143]">Jumlah ${obatNameArray[index]}</label>
+                            <input type="number" name="jumlah_obat[]" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" value="${jumlahArray[index]}" required>
+                        `;
+                        editJumlahContainer.appendChild(div);
+                    }
+                });
+                
+                // Trigger the update function to ensure consistency
+                if (typeof updateEditJumlahObatInputs === 'function') {
+                    updateEditJumlahObatInputs();
+                }
+            }
 
             // Set dropdown values and trigger loading
             document.getElementById('edit-unit_id').value = unitId;
@@ -593,5 +664,74 @@ document.addEventListener('DOMContentLoaded', function () {
     // Update pagination info
     updatePaginationInfo(visibleCount);
     });
+
+    // Handle multiple obat selection for add modal (checkbox)
+    const obatCheckboxes = document.querySelectorAll('.obat-checkbox');
+    const jumlahObatContainer = document.getElementById('jumlah-obat-container');
+    
+    if (obatCheckboxes.length > 0 && jumlahObatContainer) {
+        obatCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updateJumlahObatInputs();
+            });
+        });
+        
+        function updateJumlahObatInputs() {
+            const checkedCheckboxes = document.querySelectorAll('.obat-checkbox:checked');
+            
+            // Clear container
+            jumlahObatContainer.innerHTML = '';
+            
+            // Create input for each checked obat
+            checkedCheckboxes.forEach((checkbox, index) => {
+                const label = document.querySelector(`label[for="${checkbox.id}"]`);
+                const obatName = label.textContent;
+                
+                const div = document.createElement('div');
+                div.className = 'mb-2';
+                div.innerHTML = `
+                    <label class="block mb-1 text-sm font-medium text-[#142143]">Jumlah ${obatName}</label>
+                    <input type="number" name="jumlah_obat[]" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" required>
+                `;
+                jumlahObatContainer.appendChild(div);
+            });
+        }
+    }
+
+    // Define updateEditJumlahObatInputs function globally
+    function updateEditJumlahObatInputs() {
+        const editJumlahObatContainer = document.getElementById('edit-jumlah-obat-container');
+        const checkedCheckboxes = document.querySelectorAll('.edit-obat-checkbox:checked');
+        
+        if (!editJumlahObatContainer) return;
+        
+        // Clear container
+        editJumlahObatContainer.innerHTML = '';
+        
+        // Create input for each checked obat
+        checkedCheckboxes.forEach((checkbox, index) => {
+            const label = document.querySelector(`label[for="${checkbox.id}"]`);
+            const obatName = label.textContent;
+            
+            const div = document.createElement('div');
+            div.className = 'mb-2';
+            div.innerHTML = `
+                <label class="block mb-1 text-sm font-medium text-[#142143]">Jumlah ${obatName}</label>
+                <input type="number" name="jumlah_obat[]" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" required>
+            `;
+            editJumlahObatContainer.appendChild(div);
+        });
+    }
+
+    // Handle multiple obat selection for edit modal (checkbox)
+    const editObatCheckboxes = document.querySelectorAll('.edit-obat-checkbox');
+    
+    if (editObatCheckboxes.length > 0) {
+        editObatCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updateEditJumlahObatInputs();
+            });
+        });
+    }
 });
 </script>
