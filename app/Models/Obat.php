@@ -13,8 +13,10 @@ class Obat extends Model
         'jumlah'
     ];
 
-    public function kunjungan()
+    public function kunjungans()
     {
-        return $this->hasMany(Kunjungan::class, 'obat_id');
+        return $this->belongsToMany(Kunjungan::class, 'kunjungan_obat', 'obat_id', 'kunjungan_id')
+                    ->withPivot('jumlah_obat')
+                    ->withTimestamps();
     }
 }

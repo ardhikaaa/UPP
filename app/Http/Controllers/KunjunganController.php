@@ -18,7 +18,7 @@ class KunjunganController extends Controller
      */
     public function index()
     {
-        $kunjungan = Kunjungan::with(['rombel.unit', 'rombel.kelas', 'rombel.siswa', 'obat', 'guru'])->get();
+        $kunjungan = Kunjungan::with(['rombel.unit', 'rombel.kelas', 'rombel.siswa', 'obats', 'guru'])->get();
         $rombel    = Rombel::all();            
         $obat      = Obat::all();            
         $guru      = Guru::all();            
@@ -46,10 +46,12 @@ class KunjunganController extends Controller
             'unit_id'     => 'required|exists:units,id',
             'kelas_id'    => 'required|exists:kelas,id',
             'siswa_id'    => 'required|exists:siswas,id',
-            'obat_id'     => 'required|exists:obats,id',
+            'obat_ids'    => 'required|array|min:1',
+            'obat_ids.*'  => 'required|exists:obats,id',
+            'jumlah_obat' => 'required|array|min:1',
+            'jumlah_obat.*' => 'required|integer|min:1',
             'guru_id'     => 'required|exists:gurus,id',
             'diagnosa'    => 'required|string',
-            'jumlah_obat' => 'required|integer|min:1',
             'pengecekan'  => 'required|string|max:255',
             'anamnesa'    => 'required|string',
             'tindakan'    => 'required|string',
@@ -60,29 +62,39 @@ class KunjunganController extends Controller
             ->where('siswa_id', $request->siswa_id)
             ->firstOrFail();
 
-        // ambil obat sesuai pilihan
-        $obat = Obat::findOrFail($request->obat_id);
-
-        // cek stok
-        if ($obat->jumlah < $request->jumlah_obat) {
-            return back()->with('error', 'Stok obat tidak mencukupi!');
+        // Cek stok untuk semua obat
+        foreach ($request->obat_ids as $index => $obatId) {
+            $obat = Obat::findOrFail($obatId);
+            $jumlahObat = $request->jumlah_obat[$index];
+            
+            if ($obat->jumlah < $jumlahObat) {
+                return back()->with('error', "Stok obat {$obat->nama_obat} tidak mencukupi!");
+            }
         }
 
-        // kurangi stok
-        $obat->jumlah -= $request->jumlah_obat;
-        $obat->save();
-
-        Kunjungan::create([
+        // Buat kunjungan
+        $kunjungan = Kunjungan::create([
             'rombel_id'   => $rombel->id,
-            'obat_id'     => $request->obat_id,
             'guru_id'     => $request->guru_id,
             'tanggal'     => Carbon::now(),
             'diagnosa'    => $request->diagnosa,
-            'jumlah_obat' => $request->jumlah_obat,
             'pengecekan'  => $request->pengecekan,
             'anamnesa'    => $request->anamnesa,
             'tindakan'    => $request->tindakan,
         ]);
+
+        // Attach obat-obat dengan jumlah
+        foreach ($request->obat_ids as $index => $obatId) {
+            $obat = Obat::findOrFail($obatId);
+            $jumlahObat = $request->jumlah_obat[$index];
+            
+            // Kurangi stok
+            $obat->jumlah -= $jumlahObat;
+            $obat->save();
+            
+            // Attach ke kunjungan
+            $kunjungan->obats()->attach($obatId, ['jumlah_obat' => $jumlahObat]);
+        }
 
         return redirect()->route('kunjungan.index')->with('success', 'Data kunjungan berhasil dibuat');
     }
@@ -113,11 +125,13 @@ class KunjunganController extends Controller
             'unit_id'     => 'required|exists:units,id',
             'kelas_id'    => 'required|exists:kelas,id',
             'siswa_id'    => 'required|exists:siswas,id',
-            'obat_id'     => 'required|exists:obats,id',
+            'obat_ids'    => 'required|array|min:1',
+            'obat_ids.*'  => 'required|exists:obats,id',
+            'jumlah_obat' => 'required|array|min:1',
+            'jumlah_obat.*' => 'required|integer|min:1',
             'guru_id'     => 'required|exists:gurus,id',
             'tanggal'     => 'required|date',
             'diagnosa'    => 'required|string',
-            'jumlah_obat' => 'required|integer|min:1',
             'pengecekan'  => 'required|string|max:255',
             'anamnesa'    => 'required|string',
             'tindakan'    => 'required|string',
@@ -130,35 +144,48 @@ class KunjunganController extends Controller
 
         $kunjungan = Kunjungan::findOrFail($id);
 
-        // Ambil obat lama
-        $obatLama = Obat::findOrFail($kunjungan->obat_id);
-        // Kembalikan stok lama
-        $obatLama->jumlah += $kunjungan->jumlah_obat;
-        $obatLama->save();
-
-        // Ambil obat baru
-        $obatBaru = Obat::findOrFail($request->obat_id);
-
-        // Cek stok obat baru
-        if ($obatBaru->jumlah < $request->jumlah_obat) {
-            return back()->with('error', 'Stok obat tidak mencukupi!');
+        // Kembalikan stok obat lama
+        foreach ($kunjungan->obats as $obat) {
+            $obat->jumlah += $obat->pivot->jumlah_obat;
+            $obat->save();
         }
 
-        // Kurangi stok obat baru
-        $obatBaru->jumlah -= $request->jumlah_obat;
-        $obatBaru->save();
+        // Detach semua obat lama
+        $kunjungan->obats()->detach();
 
+        // Cek stok untuk semua obat baru
+        foreach ($request->obat_ids as $index => $obatId) {
+            $obat = Obat::findOrFail($obatId);
+            $jumlahObat = $request->jumlah_obat[$index];
+            
+            if ($obat->jumlah < $jumlahObat) {
+                return back()->with('error', "Stok obat {$obat->nama_obat} tidak mencukupi!");
+            }
+        }
+
+        // Update kunjungan
         $kunjungan->update([
             'rombel_id'   => $rombel->id,
-            'obat_id'     => $request->obat_id,
             'guru_id'     => $request->guru_id,
             'tanggal'     => $request->tanggal,
             'diagnosa'    => $request->diagnosa,
-            'jumlah_obat' => $request->jumlah_obat,
             'pengecekan'  => $request->pengecekan,
             'anamnesa'    => $request->anamnesa,
             'tindakan'    => $request->tindakan,
         ]);
+
+        // Attach obat-obat baru dengan jumlah
+        foreach ($request->obat_ids as $index => $obatId) {
+            $obat = Obat::findOrFail($obatId);
+            $jumlahObat = $request->jumlah_obat[$index];
+            
+            // Kurangi stok
+            $obat->jumlah -= $jumlahObat;
+            $obat->save();
+            
+            // Attach ke kunjungan
+            $kunjungan->obats()->attach($obatId, ['jumlah_obat' => $jumlahObat]);
+        }
 
         return redirect()->route('kunjungan.index')->with('success', 'Data kunjungan berhasil diperbarui');
     }
@@ -168,8 +195,15 @@ class KunjunganController extends Controller
      */
     public function destroy(string $id)
     {
-        $delete = Kunjungan::findOrFail($id);
-        $delete->delete();
+        $kunjungan = Kunjungan::findOrFail($id);
+        
+        // Kembalikan stok obat
+        foreach ($kunjungan->obats as $obat) {
+            $obat->jumlah += $obat->pivot->jumlah_obat;
+            $obat->save();
+        }
+        
+        $kunjungan->delete();
         return redirect()->route('kunjungan.index')->with('success', 'Data kunjungan berhasil dihapus.');
     }
 

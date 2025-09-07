@@ -11,10 +11,8 @@ class Kunjungan extends Model
      protected $fillable = [
         'rombel_id',
         'diagnosa',
-        'obat_id',
         'tanggal',
         'guru_id',
-        'jumlah_obat',
         'pengecekan',
         'anamnesa',
         'tindakan',
@@ -25,9 +23,11 @@ class Kunjungan extends Model
         return $this->belongsTo(Rombel::class, 'rombel_id');
     }
 
-    public function obat()
+    public function obats()
     {
-        return $this->belongsTo(Obat::class, 'obat_id');
+        return $this->belongsToMany(Obat::class, 'kunjungan_obat', 'kunjungan_id', 'obat_id')
+                    ->withPivot('jumlah_obat')
+                    ->withTimestamps();
     }
 
     public function guru()
