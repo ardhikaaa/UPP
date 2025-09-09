@@ -6,6 +6,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RombelController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,12 @@ Route::get('/get-kelas/{unit_id}', [KunjunganController::class, 'getKelas']);
 Route::get('/get-siswa/{unit_id}/{kelas_id}', [KunjunganController::class, 'getSiswa']);
 Route::get('/get-guru/{unit_id}', [KunjunganController::class, 'getGuru']);
 
+// History obat
+Route::get('/report/obat', [ReportController::class, 'obat'])->name('report.obat');
+// History kunjungan
+Route::get('/report/kunjungan', [ReportController::class, 'kunjungan'])->name('report.kunjungan');
+// History siswa
+Route::get('/report/siswa', [ReportController::class, 'siswa'])->name('report.siswa');
 
 
 Route::middleware('auth')->group(function () {
