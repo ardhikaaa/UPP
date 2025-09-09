@@ -60,12 +60,12 @@
                         <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Unit/Kelas</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Nama Siswa</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Pengecekan</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Anamnesa</th>
+                        {{-- <th scope="col" class="px-6 py-4 font-medium text-center">Pengecekan</th>
+                        <th scope="col" class="px-6 py-4 font-medium text-center">Anamnesa</th> --}}
                         <th scope="col" class="px-6 py-4 font-medium text-center">Diagnosa</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Tindakan</th>
+                        {{-- <th scope="col" class="px-6 py-4 font-medium text-center">Tindakan</th> --}}
                         <th scope="col" class="px-6 py-4 font-medium text-center">Obat</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Guru</th>
+                        {{-- <th scope="col" class="px-6 py-4 font-medium text-center">Guru</th> --}}
                         <th scope="col" class="px-6 py-4 font-medium text-center">Tanggal</th>
                         <th scope="col" class="px-6 py-4 font-medium text-center">Aksi</th>
                     </tr>
@@ -79,10 +79,10 @@
                         <div class="text-sm text-gray-500">{{ $item->rombel->kelas->kelas }}</div>
                         </td>
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->rombel->siswa->nama_siswa }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->pengecekan }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->anamnesa }}</td>
+                        {{-- <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->pengecekan }}</td>
+                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->anamnesa }}</td> --}}
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->diagnosa }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->tindakan }}</td>
+                        {{-- <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->tindakan }}</td> --}}
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">
                             @if($item->obats && $item->obats->count() > 0)
                                 @foreach($item->obats as $obatItem)
@@ -92,41 +92,50 @@
                                 N/A
                             @endif
                         </td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->guru->nama }}</td>
+                        {{-- <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->guru->nama }}</td> --}}
                         <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('l, d F Y') }}</td>
                         <td class="px-6 py-4 flex justify-center">
-                            <div class="flex items-center space-x-2">
-                                <button 
-                                    class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-obat"
-                                    data-id         ="{{ $item->id }}"
-                                    data-unit-id    ="{{ $item->rombel->unit->id }}"
-                                    data-kelas-id   ="{{ $item->rombel->kelas->id }}"
-                                    data-siswa-id   ="{{ $item->rombel->siswa->id }}"
-                                    data-pengecekan ="{{ $item->pengecekan }}"
-                                    data-anamnesa   ="{{ $item->anamnesa }}"
-                                    data-diagnosa   ="{{ $item->diagnosa }}"
-                                    data-tindakan   ="{{ $item->tindakan }}"
-                                    data-obat-ids   ="{{ $item->obats ? $item->obats->pluck('id')->implode(',') : '' }}"
-                                    data-obat-names ="{{ $item->obats ? $item->obats->pluck('nama_obat')->implode(',') : '' }}"
-                                    data-jumlahs    ="{{ $item->obats ? $item->obats->pluck('pivot.jumlah_obat')->implode(',') : '' }}"
-                                    data-guru-id    ="{{ $item->guru->id }}"
-                                    data-tanggal    ="{{ $item->tanggal }}"
-                                    data-modal-target="edit-kunjungan-modal" data-modal-toggle="edit-kunjungan-modal"
-                                >
+                            <a href="{{route('kunjungan.show', $item->id)}}">
+                                <button data-modal-target="show-kunjungan-modal" data-modal-toggle="show-kunjungan-modal"
+                                    class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#0072BC]/10 transition duration-200">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                     </svg>
                                 </button>
-                                <form action="{{ route('kunjungan.destroy', $item->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="text-[#ffaf00] hover:text-[#142143] p-1 rounded-lg hover:bg-[#ffaf00]/10 transition duration-200">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
-                                    </button>
-                                </form>
-                            </div>
+                            </a>
+                            <button 
+                                class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-obat"
+                                data-id         ="{{ $item->id }}"
+                                data-unit-id    ="{{ $item->rombel->unit->id }}"
+                                data-kelas-id   ="{{ $item->rombel->kelas->id }}"
+                                data-siswa-id   ="{{ $item->rombel->siswa->id }}"
+                                data-pengecekan ="{{ $item->pengecekan }}"
+                                data-anamnesa   ="{{ $item->anamnesa }}"
+                                data-diagnosa   ="{{ $item->diagnosa }}"
+                                data-tindakan   ="{{ $item->tindakan }}"
+                                data-obat-ids   ="{{ $item->obats ? $item->obats->pluck('id')->implode(',') : '' }}"
+                                data-obat-names ="{{ $item->obats ? $item->obats->pluck('nama_obat')->implode(',') : '' }}"
+                                data-jumlahs    ="{{ $item->obats ? $item->obats->pluck('pivot.jumlah_obat')->implode(',') : '' }}"
+                                data-guru-id    ="{{ $item->guru->id }}"
+                                data-tanggal    ="{{ $item->tanggal }}"
+                                data-modal-target="edit-kunjungan-modal" data-modal-toggle="edit-kunjungan-modal"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                            </button>
+                            <form action="{{ route('kunjungan.destroy', $item->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-[#ffaf00] hover:text-[#142143] p-1 rounded-lg hover:bg-[#ffaf00]/10 transition duration-200">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach
@@ -368,6 +377,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 id, unitId, kelasId, siswaId, pengecekan, anamnesa, diagnosa, tindakan,
                 obatIds, obatNames, jumlahs, guruId, tanggal
             });
+            
+            // Debug: Log the arrays
+            if (obatIds && obatIds !== '') {
+                console.log('Obat IDs:', obatIds.split(','));
+                console.log('Obat Names:', obatNames.split(','));
+                console.log('Jumlahs:', jumlahs.split(','));
+            }
 
             // Set form action
             document.getElementById('form-edit-kunjungan').action = `/kunjungan/${id}`;
@@ -386,6 +402,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 const obatIdArray = obatIds.split(',');
                 const obatNameArray = obatNames.split(',');
                 const jumlahArray = jumlahs.split(',');
+                
+                // Create a mapping of obat ID to jumlah
+                const obatJumlahMap = {};
+                obatIdArray.forEach((obatId, index) => {
+                    if (obatId && jumlahArray[index]) {
+                        obatJumlahMap[obatId] = jumlahArray[index];
+                    }
+                });
                 
                 // Uncheck all checkboxes first
                 document.querySelectorAll('.edit-obat-checkbox').forEach(checkbox => {
@@ -407,12 +431,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 editJumlahContainer.innerHTML = '';
                 
                 obatIdArray.forEach((obatId, index) => {
-                    if (obatId) {
+                    if (obatId && obatNameArray[index]) {
                         const div = document.createElement('div');
                         div.className = 'mb-2';
                         div.innerHTML = `
                             <label class="block mb-1 text-sm font-medium text-[#142143]">Jumlah ${obatNameArray[index]}</label>
-                            <input type="number" name="jumlah_obat[]" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" value="${jumlahArray[index]}" required>
+                            <input type="number" name="jumlah_obat[]" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" value="${obatJumlahMap[obatId] || ''}" required>
                         `;
                         editJumlahContainer.appendChild(div);
                     }
@@ -705,6 +729,17 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (!editJumlahObatContainer) return;
         
+        // Store existing values before clearing
+        const existingValues = {};
+        const existingInputs = editJumlahObatContainer.querySelectorAll('input[name="jumlah_obat[]"]');
+        existingInputs.forEach((input, index) => {
+            const label = input.previousElementSibling;
+            if (label) {
+                const obatName = label.textContent.replace('Jumlah ', '');
+                existingValues[obatName] = input.value;
+            }
+        });
+        
         // Clear container
         editJumlahObatContainer.innerHTML = '';
         
@@ -712,12 +747,13 @@ document.addEventListener('DOMContentLoaded', function () {
         checkedCheckboxes.forEach((checkbox, index) => {
             const label = document.querySelector(`label[for="${checkbox.id}"]`);
             const obatName = label.textContent;
+            const existingValue = existingValues[obatName] || '';
             
             const div = document.createElement('div');
             div.className = 'mb-2';
             div.innerHTML = `
                 <label class="block mb-1 text-sm font-medium text-[#142143]">Jumlah ${obatName}</label>
-                <input type="number" name="jumlah_obat[]" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" required>
+                <input type="number" name="jumlah_obat[]" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" value="${existingValue}" required>
             `;
             editJumlahObatContainer.appendChild(div);
         });

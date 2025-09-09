@@ -105,7 +105,10 @@ class KunjunganController extends Controller
      */
     public function show(string $id)
     {
-        //
+         $kunjungan = Kunjungan::with(['rombel.unit', 'rombel.kelas', 'rombel.siswa', 'guru', 'obats'])
+        ->findOrFail($id);
+
+        return view('show', compact('kunjungan'));
     }
 
     /**
@@ -113,7 +116,12 @@ class KunjunganController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $kunjungan = Kunjungan::with(['rombel.unit', 'rombel.kelas', 'rombel.siswa', 'obats', 'guru'])->findOrFail($id);
+        $rombel = Rombel::all();
+        $obat = Obat::all();
+        $guru = Guru::all();
+
+        return view('kunjungan_uks', compact('kunjungan', 'rombel', 'obat', 'guru', 'id'));
     }
 
     /**
@@ -197,12 +205,8 @@ class KunjunganController extends Controller
     {
         $kunjungan = Kunjungan::findOrFail($id);
         
-        // Kembalikan stok obat
-        foreach ($kunjungan->obats as $obat) {
-            $obat->jumlah += $obat->pivot->jumlah_obat;
-            $obat->save();
-        }
-        
+        // Hapus kunjungan tanpa mengembalikan stok obat
+        // Stok obat tetap pada jumlah yang sudah dikurangi
         $kunjungan->delete();
         return redirect()->route('kunjungan.index')->with('success', 'Data kunjungan berhasil dihapus.');
     }
