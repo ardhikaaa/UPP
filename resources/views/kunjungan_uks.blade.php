@@ -25,7 +25,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" id="searchInput" name="searchInput" placeholder="Cari info kunjungan..." 
+                        <input type="text" id="searchInput" placeholder="Cari info kunjungan..." 
                                class="block w-full pl-10 pr-3 py-2 border border-[#142143]/30 rounded-lg leading-5 bg-white text-[#142143] placeholder-[#142143]/60 focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]">
                     </div>
                 </div>
@@ -47,6 +47,43 @@
                         {{ session('success') }} 
                     </div>
                     <button type="button" onclick="document.getElementById('success-alert').remove()" class="ml-4 text-[#142143] hover:text-red-500 rounded focus:outline-none">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div id="error-alert" class="relative p-4 mb-4 text-sm text-white bg-red-500 rounded-lg flex justify-between items-start">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                        {{ session('error') }}
+                    </div>
+                    <button type="button" onclick="document.getElementById('error-alert').remove()" class="ml-4 text-white hover:text-gray-200 rounded focus:outline-none">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div id="validation-error-alert" class="relative p-4 mb-4 text-sm text-white bg-red-500 rounded-lg">
+                    <div class="flex items-center mb-2">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                        <strong>Terjadi kesalahan:</strong>
+                    </div>
+                    <ul class="list-disc list-inside ml-7">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                    <button type="button" onclick="document.getElementById('validation-error-alert').remove()" class="absolute top-2 right-2 text-white hover:text-gray-200 rounded focus:outline-none">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
@@ -147,22 +184,57 @@
         <div class="px-6 py-4 border-t border-[#142143]/20">
             <div class="flex items-center justify-between">
                 <div class="text-sm text-[#142143]">
-                    Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">{{ $kunjungan->count() }}</span> dari <span class="font-medium">{{ $kunjungan->count() }}</span> hasil
+                    Menampilkan
+                    <span class="font-medium">{{ $kunjungan->firstItem() ?? 0 }}</span>
+                    sampai
+                    <span class="font-medium">{{ $kunjungan->lastItem() ?? 0 }}</span>
+                    dari
+                    <span class="font-medium">{{ $kunjungan->total() }}</span> hasil
                 </div>
+
                 <div class="flex items-center space-x-2">
-                    <button class="px-3 py-1 text-sm bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
+                    {{-- Tombol Sebelumnya --}}
+                    <a href="{{ $kunjungan->previousPageUrl() ?? '#' }}"
+                    class="px-3 py-1 text-sm rounded-lg transition duration-200
+                            {{ $kunjungan->onFirstPage() 
+                                ? 'bg-[#e4e4e4] text-gray-400 cursor-not-allowed' 
+                                : 'bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143]' }}">
                         Sebelumnya
-                    </button>
-                    <button class="px-3 py-1 text-sm bg-[#0072BC] text-white rounded-lg">1</button>
-                    <button class="px-3 py-1 text-sm bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
+                    </a>
+
+                    {{-- Nomor halaman --}}
+                    @php
+                        $start = max(1, $kunjungan->currentPage() - 2);
+                        $end = min($kunjungan->lastPage(), $kunjungan->currentPage() + 2);
+                    @endphp
+
+                    @for ($i = $start; $i <= $end; $i++)
+                        <a href="{{ $kunjungan->url($i) }}"
+                        class="px-3 py-1 text-sm rounded-lg transition duration-200
+                                {{ $kunjungan->currentPage() == $i 
+                                    ? 'bg-[#0072BC] text-white' 
+                                    : 'bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143]' }}">
+                            {{ $i }}
+                        </a>
+                    @endfor
+
+                    {{-- Tombol Selanjutnya --}}
+                    <a href="{{ $kunjungan->nextPageUrl() ?? '#' }}"
+                    class="px-3 py-1 text-sm rounded-lg transition duration-200
+                            {{ $kunjungan->hasMorePages() 
+                                ? 'bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143]' 
+                                : 'bg-[#e4e4e4] text-gray-400 cursor-not-allowed' }}">
                         Selanjutnya
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal Tambah Unit -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+</x-app-layout>
+
+    <!-- Modal Tambah Kunjungan -->
     <div id="tambah-kunjungan-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative p-4 w-full max-w-md max-h-full">
             <div class="relative bg-[#e4e4e4] rounded-lg shadow-sm">
@@ -211,8 +283,15 @@
                         <div class="bg-white border border-[#142143]/30 rounded-lg p-3 max-h-40 overflow-y-auto">
                             @foreach ($obat as $o)
                                 <div class="flex items-center mb-2">
-                                    <input type="checkbox" name="obat_ids[]" value="{{ $o->id }}" id="obat_{{ $o->id }}" class="obat-checkbox w-4 h-4 text-[#1a5d94] bg-gray-100 border-gray-300 rounded focus:ring-[#1a5d94] focus:ring-2">
-                                    <label for="obat_{{ $o->id }}" class="ml-2 text-sm text-[#142143] cursor-pointer">{{ $o->nama_obat }}</label>
+                                    <input type="checkbox" name="obat_ids[]" value="{{ $o->id }}" id="obat_{{ $o->id }}" class="obat-checkbox w-4 h-4 text-[#1a5d94] bg-gray-100 border-gray-300 rounded focus:ring-[#1a5d94] focus:ring-2" {{ $o->jumlah <= 0 ? 'disabled' : '' }}>
+                                    <label for="obat_{{ $o->id }}" class="ml-2 text-sm cursor-pointer {{ $o->jumlah <= 0 ? 'text-gray-400' : 'text-[#142143]' }}">
+                                        {{ $o->nama_obat }}
+                                        @if($o->jumlah <= 0)
+                                            <span class="text-red-500 text-xs">(Stok Habis)</span>
+                                        @else
+                                            <span class="text-green-600 text-xs">(Stok: {{ $o->jumlah }})</span>
+                                        @endif
+                                    </label>
                                 </div>
                             @endforeach
                         </div>
@@ -304,8 +383,15 @@
                         <div class="bg-white border border-[#142143]/30 rounded-lg p-3 max-h-40 overflow-y-auto">
                             @foreach ($obat as $o)
                                 <div class="flex items-center mb-2">
-                                    <input type="checkbox" name="obat_ids[]" value="{{ $o->id }}" id="edit_obat_{{ $o->id }}" class="edit-obat-checkbox w-4 h-4 text-[#1a5d94] bg-gray-100 border-gray-300 rounded focus:ring-[#1a5d94] focus:ring-2">
-                                    <label for="edit_obat_{{ $o->id }}" class="ml-2 text-sm text-[#142143] cursor-pointer">{{ $o->nama_obat }}</label>
+                                    <input type="checkbox" name="obat_ids[]" value="{{ $o->id }}" id="edit_obat_{{ $o->id }}" class="edit-obat-checkbox w-4 h-4 text-[#1a5d94] bg-gray-100 border-gray-300 rounded focus:ring-[#1a5d94] focus:ring-2" {{ $o->jumlah <= 0 ? 'disabled' : '' }}>
+                                    <label for="edit_obat_{{ $o->id }}" class="ml-2 text-sm cursor-pointer {{ $o->jumlah <= 0 ? 'text-gray-400' : 'text-[#142143]' }}">
+                                        {{ $o->nama_obat }}
+                                        @if($o->jumlah <= 0)
+                                            <span class="text-red-500 text-xs">(Stok Habis)</span>
+                                        @else
+                                            <span class="text-green-600 text-xs">(Stok: {{ $o->jumlah }})</span>
+                                        @endif
+                                    </label>
                                 </div>
                             @endforeach
                         </div>
@@ -349,9 +435,6 @@
           </div>
       </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-</x-app-layout>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -709,13 +792,16 @@ document.addEventListener('DOMContentLoaded', function () {
             // Create input for each checked obat
             checkedCheckboxes.forEach((checkbox, index) => {
                 const label = document.querySelector(`label[for="${checkbox.id}"]`);
-                const obatName = label.textContent;
+                const obatName = label.textContent.split('(')[0].trim(); // Remove stock info from name
+                const stockText = label.textContent.match(/\(Stok: (\d+)\)/);
+                const maxStock = stockText ? parseInt(stockText[1]) : 999;
                 
                 const div = document.createElement('div');
                 div.className = 'mb-2';
                 div.innerHTML = `
                     <label class="block mb-1 text-sm font-medium text-[#142143]">Jumlah ${obatName}</label>
-                    <input type="number" name="jumlah_obat[]" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" required>
+                    <input type="number" name="jumlah_obat[]" min="1" max="${maxStock}" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" required>
+                    <p class="text-xs text-gray-500 mt-1">Maksimal: ${maxStock} (stok tersedia)</p>
                 `;
                 jumlahObatContainer.appendChild(div);
             });
@@ -746,14 +832,17 @@ document.addEventListener('DOMContentLoaded', function () {
         // Create input for each checked obat
         checkedCheckboxes.forEach((checkbox, index) => {
             const label = document.querySelector(`label[for="${checkbox.id}"]`);
-            const obatName = label.textContent;
+            const obatName = label.textContent.split('(')[0].trim(); // Remove stock info from name
+            const stockText = label.textContent.match(/\(Stok: (\d+)\)/);
+            const maxStock = stockText ? parseInt(stockText[1]) : 999;
             const existingValue = existingValues[obatName] || '';
             
             const div = document.createElement('div');
             div.className = 'mb-2';
             div.innerHTML = `
                 <label class="block mb-1 text-sm font-medium text-[#142143]">Jumlah ${obatName}</label>
-                <input type="number" name="jumlah_obat[]" min="1" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" value="${existingValue}" required>
+                <input type="number" name="jumlah_obat[]" min="1" max="${maxStock}" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" value="${existingValue}" required>
+                <p class="text-xs text-gray-500 mt-1">Maksimal: ${maxStock} (stok tersedia)</p>
             `;
             editJumlahObatContainer.appendChild(div);
         });

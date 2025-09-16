@@ -13,7 +13,10 @@ class GuruController extends Controller
      */
     public function index()
 {
-    $gurus = Guru::with('unit')->get();
+    $gurus = Guru::with(['unit'])  
+        ->orderBy('created_at', 'desc')
+        ->paginate(5);
+
     $units = Unit::all();
     return view('guru', compact('gurus', 'units'));
 }

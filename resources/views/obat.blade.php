@@ -25,7 +25,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" placeholder="Cari obat..." 
+                        <input type="text" id="searchInput" placeholder="Cari obat..." 
                                class="block w-full pl-10 pr-3 py-2 border border-[#142143]/30 rounded-lg leading-5 bg-white text-[#142143] placeholder-[#142143]/60 focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]">
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                 </div>
             @endif
 
-            <table class="w-full text-sm text-left text-[#142143]">
+            <table class="w-full text-sm text-left text-[#142143]" id="Table">
                 <thead class="text-xs uppercase bg-[#0072BC] text-white">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
@@ -196,20 +196,51 @@
 </x-app-layout>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.btn-edit-obat').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            const id = this.getAttribute('data-id');
-            const obat = this.getAttribute('data-obat');
-            const jumlah = this.getAttribute('data-jumlah');
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.btn-edit-obat').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const obat = this.getAttribute('data-obat');
+                const jumlah = this.getAttribute('data-jumlah');
 
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-obat').value = obat;
-            document.getElementById('edit-jumlah').value = jumlah;
+                document.getElementById('edit-id').value = id;
+                document.getElementById('edit-obat').value = obat;
+                document.getElementById('edit-jumlah').value = jumlah;
 
-            // Set form action
-            document.getElementById('form-edit-obat').action = `/obat/${id}`;
+                // Set form action
+                document.getElementById('form-edit-obat').action = `/obat/${id}`;
+            });
         });
     });
-});
+
+    // Enhanced search functionality
+    document.getElementById('searchInput').addEventListener('keyup', function () {
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#Table tbody tr');
+    let visibleCount = 0;
+
+    rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        let found = false;
+
+        // Search in name, degree, and subject columns
+        for (let i = 1; i < cells.length - 1; i++) {
+        if (cells[i].textContent.toLowerCase().includes(searchValue)) {
+            found = true;
+            break;
+        }
+        }
+
+        if (found) {
+        row.style.display = '';
+        row.style.animation = `fadeIn 0.3s ease ${index * 0.1}s both`;
+        visibleCount++;
+        } else {
+        row.style.display = 'none';
+        }
+    });
+
+    // Update pagination info
+    updatePaginationInfo(visibleCount);
+    });
 </script>

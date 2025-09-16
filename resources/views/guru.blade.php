@@ -25,7 +25,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" placeholder="Cari guru berdasarkan nama atau mata pelajaran..." 
+                        <input type="text" id="searchInput" placeholder="Cari guru berdasarkan nama atau mata pelajaran..." 
                                class="block w-full pl-10 pr-3 py-2 border border-[#142143]/30 rounded-lg leading-5 bg-white text-[#142143] placeholder-[#142143]/60 focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]">
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                 </div>
             @endif
 
-            <table class="w-full text-sm text-left text-[#142143]">
+            <table class="w-full text-sm text-left text-[#142143]" id="Table">
                 <thead class="text-xs uppercase bg-[#0072BC] text-white">
                     <tr>
                         <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
@@ -106,16 +106,48 @@
         <div class="px-6 py-4 border-t border-[#142143]/20">
             <div class="flex items-center justify-between">
                 <div class="text-sm text-[#142143]">
-                    Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">{{ count($gurus) }}</span> dari <span class="font-medium">{{ count($gurus) }}</span> hasil
+                    Menampilkan
+                    <span class="font-medium">{{ $gurus->firstItem() ?? 0 }}</span>
+                    sampai
+                    <span class="font-medium">{{ $gurus->lastItem() ?? 0 }}</span>
+                    dari
+                    <span class="font-medium">{{ $gurus->total() }}</span> hasil
                 </div>
+
                 <div class="flex items-center space-x-2">
-                    <button class="px-3 py-1 text-sm bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
+                    {{-- Tombol Sebelumnya --}}
+                    <a href="{{ $gurus->previousPageUrl() ?? '#' }}"
+                    class="px-3 py-1 text-sm rounded-lg transition duration-200
+                            {{ $gurus->onFirstPage() 
+                                ? 'bg-[#e4e4e4] text-gray-400 cursor-not-allowed' 
+                                : 'bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143]' }}">
                         Sebelumnya
-                    </button>
-                    <button class="px-3 py-1 text-sm bg-[#1a5d94] text-white rounded-lg">1</button>
-                    <button class="px-3 py-1 text-sm bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
+                    </a>
+
+                    {{-- Nomor halaman --}}
+                    @php
+                        $start = max(1, $gurus->currentPage() - 2);
+                        $end = min($gurus->lastPage(), $gurus->currentPage() + 2);
+                    @endphp
+
+                    @for ($i = $start; $i <= $end; $i++)
+                        <a href="{{ $gurus->url($i) }}"
+                        class="px-3 py-1 text-sm rounded-lg transition duration-200
+                                {{ $gurus->currentPage() == $i 
+                                    ? 'bg-[#0072BC] text-white' 
+                                    : 'bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143]' }}">
+                            {{ $i }}
+                        </a>
+                    @endfor
+
+                    {{-- Tombol Selanjutnya --}}
+                    <a href="{{ $gurus->nextPageUrl() ?? '#' }}"
+                    class="px-3 py-1 text-sm rounded-lg transition duration-200
+                            {{ $gurus->hasMorePages() 
+                                ? 'bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143]' 
+                                : 'bg-[#e4e4e4] text-gray-400 cursor-not-allowed' }}">
                         Selanjutnya
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -229,6 +261,37 @@
                 document.getElementById('form-edit-guru').action = `/guru/${id}`;
             });
         });
+    });
+
+    // Enhanced search functionality
+    document.getElementById('searchInput').addEventListener('keyup', function () {
+    const searchValue = this.value.toLowerCase();
+    const rows = document.querySelectorAll('#Table tbody tr');
+    let visibleCount = 0;
+
+    rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        let found = false;
+
+        // Search in name, degree, and subject columns
+        for (let i = 1; i < cells.length - 1; i++) {
+        if (cells[i].textContent.toLowerCase().includes(searchValue)) {
+            found = true;
+            break;
+        }
+        }
+
+        if (found) {
+        row.style.display = '';
+        row.style.animation = `fadeIn 0.3s ease ${index * 0.1}s both`;
+        visibleCount++;
+        } else {
+        row.style.display = 'none';
+        }
+    });
+
+    // Update pagination info
+    updatePaginationInfo(visibleCount);
     });
     </script>
 </x-app-layout>

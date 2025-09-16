@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Obat;
+use App\Models\ObatHistory;
 use Illuminate\Http\Request;
 
 class halaman_obatController extends Controller
@@ -34,7 +35,17 @@ class halaman_obatController extends Controller
             'jumlah'    => 'required|integer|max:255',
         ]);
 
-        Obat::create($request->all());
+        $obat = Obat::create($request->all());
+
+        // Catat history stok masuk
+        ObatHistory::create([
+        'obat_id'   => $obat->id,
+        'jumlah'    => $request->jumlah,
+        'tipe'      => 'masuk',
+        'tanggal'   => now(),
+        'keterangan'=> 'Stok awal obat ditambahkan',
+        ]);
+
         return redirect()->route('obat.index')->with('success', 'Data obat berhasil ditambahkan.');
     }
 
@@ -66,7 +77,23 @@ class halaman_obatController extends Controller
         ]);
 
         $obat = Obat::findOrFail($id);
+
+         // Hitung selisih stok lama & baru
+        $selisih = $request->jumlah - $obat->jumlah;
+
+        // update data obat
         $obat->update($request->all());
+
+        // Kalau ada perubahan stok, simpan history
+        if ($selisih != 0) {
+            ObatHistory::create([
+                'obat_id'   => $obat->id,
+                'jumlah'    => abs($selisih),
+                'tipe'      => $selisih > 0 ? 'masuk' : 'keluar',
+                'tanggal'   => now(),
+                'keterangan'=> 'Perubahan stok melalui update data obat',
+            ]);
+        }
 
         return redirect()->route('obat.index')->with('success', 'Data obat berhasil diupdate.');
     }

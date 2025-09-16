@@ -16,7 +16,13 @@ class Obat extends Model
     public function kunjungans()
     {
         return $this->belongsToMany(Kunjungan::class, 'kunjungan_obat', 'obat_id', 'kunjungan_id')
-                    ->withPivot('jumlah_obat')
-                    ->withTimestamps();
+        ->withPivot('jumlah_obat')
+        ->withTimestamps();
     }
+
+    public function histories()
+    {
+        return $this->hasMany(ObatHistory::class);
+    }
+
 }
