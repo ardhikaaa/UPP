@@ -162,17 +162,26 @@
                             </div>
                             <h3 class="text-xl font-bold text-blue-800">{{ $title }}</h3>
                         </div>
-                        @if($reportData->count() > 0)
-                        <div class="flex space-x-3">
-                            <button onclick="exportToPDF()" 
-                                    class="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-300 shadow-lg flex items-center space-x-2">
+                        <div class="flex items-end gap-2">
+                            @if($reportData->count() > 0)
+                            <div class="flex space-x-3">
+                                <button onclick="exportToPDF()" 
+                                        class="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-yellow-300 shadow-lg flex items-center space-x-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    <span>This Page</span>
+                                </button>
+                            </div>
+                            @endif
+                            <a href="{{ route('report.kunjungan.export.pdf', request()->query()) }}" 
+                                class="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 shadow-lg flex items-center space-x-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
-                                <span>Export PDF</span>
-                            </button>
+                                <span>All Data</span>
+                            </a>
                         </div>
-                        @endif
                     </div>
 
                     @if($reportData->count() > 0)
@@ -345,126 +354,209 @@
         });
 
         function exportToPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('l', 'pt', 'a4'); // landscape, points, A4
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('l', 'pt', 'a4'); // landscape, points, A4
 
-            // Header
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(18);
-            doc.setTextColor(20, 33, 67);
-            doc.text('LAPORAN KUNJUNGAN', 420, 40, { align: 'center' });
-            
-            doc.setFontSize(12);
-            doc.text('{{ $title }}', 420, 60, { align: 'center' });
+    // Header
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(20, 33, 67);
+    doc.text('LAPORAN KUNJUNGAN', 420, 40, { align: 'center' });
+    
+    doc.setFontSize(12);
+    doc.text('{{ $title }}', 420, 60, { align: 'center' });
 
-            // Tanggal generate
-            const today = new Date().toLocaleDateString('id-ID', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            doc.setFontSize(10);
-            doc.setFont('helvetica', 'normal');
-            doc.text(`Digenerate pada: ${today}`, 40, 85);
+    // Tanggal generate
+    const today = new Date().toLocaleDateString('id-ID', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Digenerate pada: ${today}`, 40, 85);
 
-            // Prepare table data
-            const tableData = [];
-            @if($reportData->count() > 0)
-                @foreach($reportData as $index => $k)
-                    tableData.push([
-                        '{{ ($reportData->firstItem() ?? 0) + $index }}',
-                        '{{ \Carbon\Carbon::parse($k->tanggal)->format('d/m/Y') }}',
-                        '{{ optional(optional($k->rombel)->kelas)->kelas ?? '-' }} / {{ optional(optional($k->rombel)->unit)->unit ?? '-' }}',
-                        '{{ optional(optional($k->rombel)->siswa)->nama_siswa ?? '-' }}',
-                        `{{ str_replace(["\n", "\r", "|", '"'], [' ', ' ', ' ', "'"] , $k->diagnosa ?? '-') }}`,
-                        `@if($k->obats && $k->obats->count() > 0){{ $k->obats->map(fn($o) => $o->nama_obat.' ('.($o->pivot->jumlah_obat ?? 0).')')->implode(', ') }}@else-@endif`
-                    ]);
-                @endforeach
-            @else
-                tableData.push(['', '', 'Tidak ada data', '', '', '']);
-            @endif
+    // Improved Summary Cards - Layout seperti gambar
+    const cardWidth = 220;
+    const cardHeight = 60;
+    const cardSpacing = 20;
+    const startX = 60; // Centered positioning for 3 cards
+    const startY = 105;
 
-            // Create table
-            doc.autoTable({
-                startY: 110,
-                head: [['No', 'Tanggal', 'Kelas/Unit', 'Nama Siswa', 'Diagnosa', 'Obat']],
-                body: tableData,
-                theme: 'grid',
-                headStyles: {
-                    fillColor: [59, 130, 246],
-                    textColor: [255, 255, 255],
-                    fontSize: 10,
-                    fontStyle: 'bold',
-                    halign: 'center',
-                    valign: 'middle',
-                    lineWidth: 0.75,
-                    lineColor: [180, 180, 180]
-                },
-                bodyStyles: {
-                    fontSize: 9,
-                    textColor: [20, 33, 67],
-                    overflow: 'linebreak',
-                    lineWidth: 0.5,
-                    lineColor: [200, 200, 200],
-                    valign: 'top'
-                },
-                alternateRowStyles: {
-                    fillColor: [248, 250, 252]
-                },
-                columnStyles: {
-                    0: { cellWidth: 30, halign: 'center' },     // No
-                    1: { cellWidth: 75, halign: 'center' },     // Tanggal
-                    2: { cellWidth: 120, halign: 'left' },      // Kelas/Unit
-                    3: { cellWidth: 150, halign: 'left' },      // Nama Siswa
-                    4: { cellWidth: 200, halign: 'left' },      // Diagnosa
-                    5: { cellWidth: 160, halign: 'left' }       // Obat
-                },
-                tableWidth: 'wrap',
-                styles: {
-                    cellPadding: { top: 5, right: 5, bottom: 5, left: 5 },
-                    lineWidth: 0.5,
-                    lineColor: [200, 200, 200],
-                    overflow: 'linebreak',
-                    cellWidth: 'wrap'
-                },
-                tableLineWidth: 0.75,
-                tableLineColor: [180, 180, 180],
-                margin: { left: 30, right: 30, top: 20, bottom: 50 },
-                pageBreak: 'auto',
-                rowPageBreak: 'avoid',
-                showHead: 'everyPage'
-            });
+    // Card background color and border
+    const cardBgColor = [248, 250, 252]; // Light gray background
+    const borderColor = [226, 232, 240]; // Light border
+    const headerBgColor = [241, 245, 249]; // Slightly darker header
 
-            // Add page numbers and footer
-            const pageCount = doc.internal.getNumberOfPages();
-            const pageHeight = doc.internal.pageSize.height;
-            
-            for (let i = 1; i <= pageCount; i++) {
-                doc.setPage(i);
-                
-                // Footer
-                doc.setFontSize(8);
-                doc.setTextColor(100, 100, 100);
-                doc.text(`Halaman ${i} dari ${pageCount}`, 420, pageHeight - 20, { align: 'center' });
-                doc.text('Sistem Manajemen Kunjungan', 30, pageHeight - 20);
-                
-                // Add border line for footer
-                doc.setDrawColor(200, 200, 200);
-                doc.setLineWidth(0.5);
-                doc.line(30, pageHeight - 35, 810, pageHeight - 35);
-            }
+    // Card 1: Total Kunjungan
+    doc.setFillColor(...cardBgColor);
+    doc.setDrawColor(...borderColor);
+    doc.setLineWidth(1);
+    doc.rect(startX, startY, cardWidth, cardHeight, 'FD');
+    
+    // Card header
+    doc.setFillColor(...headerBgColor);
+    doc.rect(startX, startY, cardWidth, 20, 'F');
+    doc.setDrawColor(...borderColor);
+    doc.line(startX, startY + 20, startX + cardWidth, startY + 20);
+    
+    // Card 1 content
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Total Kunjungan:', startX + 10, startY + 15);
+    
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(20, 33, 67);
+    doc.text('{{ number_format($totalKunjungan) }}', startX + 10, startY + 45);
 
-            // Generate filename with proper formatting
-            const now = new Date();
-            const dateString = now.toLocaleDateString('id-ID').replace(/\//g, '-');
-            const fileName = `Laporan_Kunjungan_${dateString}.pdf`;
-            
-            // Save the PDF
-            doc.save(fileName);
-            
-            // Optional: Show success message
-            console.log(`PDF berhasil diexport: ${fileName}`);
-        }
+    // Card 2: Siswa Unik
+    const card2X = startX + cardWidth + cardSpacing;
+    doc.setFillColor(...cardBgColor);
+    doc.setDrawColor(...borderColor);
+    doc.setLineWidth(1);
+    doc.rect(card2X, startY, cardWidth, cardHeight, 'FD');
+    
+    // Card header
+    doc.setFillColor(...headerBgColor);
+    doc.rect(card2X, startY, cardWidth, 20, 'F');
+    doc.setDrawColor(...borderColor);
+    doc.line(card2X, startY + 20, card2X + cardWidth, startY + 20);
+    
+    // Card 2 content
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Siswa Unik:', card2X + 10, startY + 15);
+    
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(20, 33, 67);
+    doc.text('{{ number_format($totalSiswaUnik) }}', card2X + 10, startY + 45);
+
+    // Card 3: Total Obat Digunakan
+    const card3X = card2X + cardWidth + cardSpacing;
+    doc.setFillColor(...cardBgColor);
+    doc.setDrawColor(...borderColor);
+    doc.setLineWidth(1);
+    doc.rect(card3X, startY, cardWidth, cardHeight, 'FD');
+    
+    // Card header
+    doc.setFillColor(...headerBgColor);
+    doc.rect(card3X, startY, cardWidth, 20, 'F');
+    doc.setDrawColor(...borderColor);
+    doc.line(card3X, startY + 20, card3X + cardWidth, startY + 20);
+    
+    // Card 3 content
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(71, 85, 105);
+    doc.text('Total Obat Digunakan:', card3X + 10, startY + 15);
+    
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(20, 33, 67);
+    doc.text('{{ number_format($totalObatDigunakan) }}', card3X + 10, startY + 45);
+
+    // Prepare table data
+    const tableData = [];
+    @if($reportData->count() > 0)
+        @foreach($reportData as $index => $k)
+            tableData.push([
+                '{{ ($reportData->firstItem() ?? 0) + $index }}',
+                '{{ \Carbon\Carbon::parse($k->tanggal)->format('d/m/Y') }}',
+                '{{ optional(optional($k->rombel)->kelas)->kelas ?? '-' }} / {{ optional(optional($k->rombel)->unit)->unit ?? '-' }}',
+                '{{ optional(optional($k->rombel)->siswa)->nama_siswa ?? '-' }}',
+                `{{ str_replace(["\n", "\r", "|", '"'], [' ', ' ', ' ', "'"] , $k->diagnosa ?? '-') }}`,
+                `@if($k->obats && $k->obats->count() > 0){{ $k->obats->map(fn($o) => $o->nama_obat.' ('.($o->pivot->jumlah_obat ?? 0).')')->implode(', ') }}@else-@endif`
+            ]);
+        @endforeach
+    @else
+        tableData.push(['', '', 'Tidak ada data', '', '', '']);
+    @endif
+
+    // Create table - adjusted startY to accommodate new card layout
+    doc.autoTable({
+        startY: startY + cardHeight + 30, // Increased spacing after cards
+        head: [['No', 'Tanggal', 'Kelas/Unit', 'Nama Siswa', 'Diagnosa', 'Obat']],
+        body: tableData,
+        theme: 'grid',
+        headStyles: {
+            fillColor: [59, 130, 246],
+            textColor: [255, 255, 255],
+            fontSize: 10,
+            fontStyle: 'bold',
+            halign: 'center',
+            valign: 'middle',
+            lineWidth: 0.75,
+            lineColor: [180, 180, 180]
+        },
+        bodyStyles: {
+            fontSize: 9,
+            textColor: [20, 33, 67],
+            overflow: 'linebreak',
+            lineWidth: 0.5,
+            lineColor: [200, 200, 200],
+            valign: 'top'
+        },
+        alternateRowStyles: {
+            fillColor: [248, 250, 252]
+        },
+        columnStyles: {
+            0: { cellWidth: 30, halign: 'center' },     // No
+            1: { cellWidth: 75, halign: 'center' },     // Tanggal
+            2: { cellWidth: 120, halign: 'left' },      // Kelas/Unit
+            3: { cellWidth: 150, halign: 'left' },      // Nama Siswa
+            4: { cellWidth: 200, halign: 'left' },      // Diagnosa
+            5: { cellWidth: 160, halign: 'left' }       // Obat
+        },
+        tableWidth: 'wrap',
+        styles: {
+            cellPadding: { top: 5, right: 5, bottom: 5, left: 5 },
+            lineWidth: 0.5,
+            lineColor: [200, 200, 200],
+            overflow: 'linebreak',
+            cellWidth: 'wrap'
+        },
+        tableLineWidth: 0.75,
+        tableLineColor: [180, 180, 180],
+        margin: { left: 30, right: 30, top: 20, bottom: 50 },
+        pageBreak: 'auto',
+        rowPageBreak: 'avoid',
+        showHead: 'everyPage'
+    });
+
+    // Add page numbers and footer
+    const pageCount = doc.internal.getNumberOfPages();
+    const pageHeight = doc.internal.pageSize.height;
+    
+    for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        
+        // Footer
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text(`Halaman ${i} dari ${pageCount}`, 420, pageHeight - 20, { align: 'center' });
+        doc.text('Sistem Manajemen Kunjungan', 30, pageHeight - 20);
+        
+        // Add border line for footer
+        doc.setDrawColor(200, 200, 200);
+        doc.setLineWidth(0.5);
+        doc.line(30, pageHeight - 35, 810, pageHeight - 35);
+    }
+
+    // Generate filename with proper formatting
+    const now = new Date();
+    const dateString = now.toLocaleDateString('id-ID').replace(/\//g, '-');
+    const fileName = `Laporan_Kunjungan_${dateString}.pdf`;
+    
+    // Save the PDF
+    doc.save(fileName);
+    
+    // Optional: Show success message
+    console.log(`PDF berhasil diexport: ${fileName}`);
+}
     </script>
 </x-app-layout>

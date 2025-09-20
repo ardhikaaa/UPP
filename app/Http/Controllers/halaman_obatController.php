@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\ObatImport;
 use App\Models\Obat;
 use App\Models\ObatHistory;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class halaman_obatController extends Controller
 {
@@ -121,5 +123,19 @@ class halaman_obatController extends Controller
         $delete = Obat::findOrFail($id);
         $delete->delete();
         return redirect()->route('obat.index')->with('success', 'Data obat berhasil dihapus.');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        // Catat waktu sebelum import untuk tracking
+        $waktuSebelumImport = now();
+        
+        Excel::import(new ObatImport, $request->file('file'));
+
+        return redirect()->route('obat.index')->with('success', 'Data obat berhasil diimport dan history tercatat.');
     }
 }

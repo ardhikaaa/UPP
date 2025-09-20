@@ -41,6 +41,37 @@
             </form>
         </div>
 
+        <!-- Import Section -->
+        <div class="p-6 border-b border-[#142143]/20">
+            <form action="{{ route('rombel.import') }}" method="POST" enctype="multipart/form-data" class="flex flex-col sm:flex-row gap-4 items-end">
+                @csrf
+                <div class="flex-1">
+                    <label class="block mb-2 text-sm font-medium text-[#142143]">Pilih File Excel</label>
+                    <div class="relative">
+                        <input type="file" name="file" required accept=".xlsx,.xls,.csv" 
+                               class="block w-full text-sm text-[#142143] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#0072BC] file:text-white hover:file:bg-[#142143] file:cursor-pointer file:transition file:duration-200 border border-[#142143]/30 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]">
+                    </div>
+                </div>
+                <button type="submit" class="inline-flex items-center px-6 py-2 bg-[#0072BC] hover:bg-[#142143] focus:ring-4 focus:ring-[#1a5d94]/30 text-white text-sm font-medium rounded-lg transition duration-200 shadow-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                    </svg>
+                    Import Excel
+                </button>
+            </form>
+            <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="flex items-start">
+                    <svg class="w-4 h-4 text-blue-600 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <div class="text-sm text-blue-800">
+                        <p class="font-medium">Catatan Penting:</p>
+                        <p class="mt-1">Pastikan data siswa sudah diisi terlebih dahulu sebelum melakukan import rombel. Siswa yang akan di-import harus sudah terdaftar di sistem.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Table Section -->
         <div class="overflow-x-auto">
             @if (session('success'))
@@ -49,6 +80,19 @@
                         {{ session('success') }} 
                     </div>
                     <button type="button" onclick="document.getElementById('success-alert').remove()" class="ml-4 text-[#142143] hover:text-red-500 rounded focus:outline-none">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div id="error-alert" class="relative p-4 mb-4 text-sm text-red-800 bg-red-100 rounded-lg flex justify-between items-start">
+                    <div>
+                        {{ session('error') }} 
+                    </div>
+                    <button type="button" onclick="document.getElementById('error-alert').remove()" class="ml-4 text-red-800 hover:text-red-600 rounded focus:outline-none">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
@@ -304,6 +348,7 @@
             </div>
         </div>
     </div>
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
     <script>

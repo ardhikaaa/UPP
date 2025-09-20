@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\GuruImport;
 use App\Models\Guru;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GuruController extends Controller
 {
@@ -100,5 +102,22 @@ class GuruController extends Controller
     {
         $guru->delete();
         return redirect()->route('guru.index')->with('success', 'Data guru berhasil dihapus.');
+    }
+
+    /**
+     * Import data guru from Excel file.
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        try {
+            Excel::import(new GuruImport, $request->file('file'));
+            return redirect()->route('guru.index')->with('success', 'Data guru berhasil diimport.');
+        } catch (\Exception $e) {
+            return redirect()->route('guru.index')->with('error', 'Terjadi kesalahan saat mengimport data: ' . $e->getMessage());
+        }
     }
 }

@@ -6,6 +6,7 @@ use App\Models\ObatHistory;
 use App\Models\Kunjungan;
 use App\Models\Siswa;
 use App\Models\Rombel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -112,7 +113,7 @@ class ReportController extends Controller
         // Data utama dengan pagination (50 per halaman)
         $reportData = (clone $query)
             ->orderBy('created_at', 'desc')
-            ->paginate(50)
+            ->paginate(10)
             ->withQueryString();
 
         // Summary berdasarkan seluruh data hasil filter
@@ -170,7 +171,7 @@ class ReportController extends Controller
         // Data utama dengan pagination (50 per halaman)
         $siswaData = (clone $query)
             ->orderBy('nama_siswa', 'asc')
-            ->paginate(5)
+            ->paginate(50)
             ->withQueryString();
 
         // Summary (seluruh data hasil filter)

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\RombelImport;
 use App\Models\Kelas;
 use App\Models\Rombel;
 use App\Models\Siswa;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RombelController extends Controller
 {
@@ -131,5 +133,22 @@ class RombelController extends Controller
         $delete = Rombel::findOrFail($id);
         $delete->delete();
         return redirect()->route('rombel.index')->with('success', 'Data rombel berhasil dihapus.');
+    }
+
+    /**
+     * Import data rombel from Excel file.
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        try {
+            Excel::import(new RombelImport, $request->file('file'));
+            return redirect()->route('rombel.index')->with('success', 'Data rombel berhasil diimport.');
+        } catch (\Exception $e) {
+            return redirect()->route('rombel.index')->with('error', 'Terjadi kesalahan saat mengimport data: ' . $e->getMessage());
+        }
     }
 }

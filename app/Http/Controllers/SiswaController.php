@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Siswa;
+use App\Imports\SiswaImport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaController extends Controller
 {
@@ -115,5 +117,22 @@ class SiswaController extends Controller
         $delete = Siswa::findOrFail($id);
         $delete->delete();
         return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil dihapus.');
+    }
+
+    /**
+     * Import data siswa from Excel file.
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls|max:2048'
+        ]);
+
+        try {
+            Excel::import(new SiswaImport, $request->file('file'));
+            return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil diimport dari Excel.');
+        } catch (\Exception $e) {
+            return redirect()->route('siswa.index')->with('error', 'Terjadi kesalahan saat mengimport data: ' . $e->getMessage());
+        }
     }
 }

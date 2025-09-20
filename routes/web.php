@@ -7,6 +7,8 @@ use App\Http\Controllers\KelasController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportObatController;
+use App\Http\Controllers\ReportKunjunganController;
 use App\Http\Controllers\RombelController;
 use App\Http\Controllers\UnitController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +41,18 @@ Route::get('/report/kunjungan', [ReportController::class, 'kunjungan'])->name('r
 // History siswa
 Route::get('/report/siswa', [ReportController::class, 'siswa'])->name('report.siswa');
 Route::get('/report/siswa/{siswaId}', [ReportController::class, 'siswaDetail'])->name('report.siswa.detail');
+
+// Export pdf
+Route::get('/report/obat/export/pdf', [ReportObatController::class, 'exportPdf'])->name('report.obat.export.pdf');
+Route::get('/report/kunjungan/export/pdf', [ReportKunjunganController::class, 'exportPdf'])->name('report.kunjungan.export.pdf');
+
+// Import
+Route::post('/obat/import', [halaman_obatController::class, 'import'])->name('obat.import');
+Route::post('/guru/import', [GuruController::class, 'import'])->name('guru.import');
+Route::post('/rombel/import', [RombelController::class, 'import'])->name('rombel.import');
+Route::post('/siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
+
+
 
 
 Route::middleware('auth')->group(function () {

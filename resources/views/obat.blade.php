@@ -41,6 +41,26 @@
             </form>
         </div>
 
+        <!-- Import Section -->
+        <div class="p-6 border-b border-[#142143]/20">
+            <form action="{{ route('obat.import') }}" method="POST" enctype="multipart/form-data" class="flex flex-col sm:flex-row gap-4 items-end">
+                @csrf
+                <div class="flex-1">
+                    <label class="block mb-2 text-sm font-medium text-[#142143]">Pilih File Excel</label>
+                    <div class="relative">
+                        <input type="file" name="file" required accept=".xlsx,.xls" 
+                               class="block w-full text-sm text-[#142143] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#0072BC] file:text-white hover:file:bg-[#142143] file:cursor-pointer file:transition file:duration-200 border border-[#142143]/30 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]">
+                    </div>
+                </div>
+                <button type="submit" class="inline-flex items-center px-6 py-2 bg-[#0072BC] hover:bg-[#142143] focus:ring-4 focus:ring-[#1a5d94]/30 text-white text-sm font-medium rounded-lg transition duration-200 shadow-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                    </svg>
+                    Import Excel
+                </button>
+            </form>
+        </div>
+        
         <!-- Table Section -->
         <div class="overflow-x-auto">
             @if (session('success'))
