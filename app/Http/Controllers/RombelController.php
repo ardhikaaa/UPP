@@ -13,9 +13,31 @@ class RombelController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rombels = Rombel::with(['siswa', 'kelas', 'unit'])->get();
+        $query = Rombel::with(['siswa', 'kelas', 'unit']);
+        
+        // Tambahkan search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->whereHas('siswa', function($subQuery) use ($searchTerm) {
+                    $subQuery->where('nama_siswa', 'like', '%' . $searchTerm . '%');
+                })
+                ->orWhereHas('kelas', function($subQuery) use ($searchTerm) {
+                    $subQuery->where('kelas', 'like', '%' . $searchTerm . '%');
+                })
+                ->orWhereHas('unit', function($subQuery) use ($searchTerm) {
+                    $subQuery->where('unit', 'like', '%' . $searchTerm . '%');
+                });
+            });
+        }
+        
+        $rombels = $query->orderBy('created_at', 'desc')->paginate(10);
+        
+        // Append search parameter to pagination links
+        $rombels->appends($request->query());
+        
         $units = Unit::all();
         $kelas = Kelas::all();
         $siswa = Siswa::all();

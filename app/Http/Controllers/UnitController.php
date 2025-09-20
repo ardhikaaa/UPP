@@ -11,11 +11,25 @@ class UnitController extends Controller
     /**
      * Display a listing of the resource.
      */
-public function index()
-{
-    $units = Unit::all();
-    return view('unit', compact('units'));
-}
+    public function index(Request $request)
+    {
+        $query = Unit::query();
+        
+        // Tambahkan search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('unit', 'like', '%' . $searchTerm . '%');
+            });
+        }
+        
+        $units = $query->orderBy('created_at', 'desc')->paginate(10);
+        
+        // Append search parameter to pagination links
+        $units->appends($request->query());
+        
+        return view('unit', compact('units'));
+    }
 
 
 

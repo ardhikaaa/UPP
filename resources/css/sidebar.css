@@ -3,6 +3,13 @@
 /* Ensure sidebar is properly positioned on all screen sizes */
 #sidebar {
     will-change: transform;
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 256px; /* 64 * 4 = 256px (w-64) */
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 50;
 }
 
 /* Smooth transitions for all interactive elements */
@@ -20,19 +27,29 @@
     body.sidebar-open {
         overflow: hidden;
     }
+    
+    /* Remove margin from main content on mobile */
+    .main-content {
+        margin-left: 0 !important;
+    }
 }
 
 /* Tablet styles */
 @media (min-width: 768px) and (max-width: 1023px) {
     #sidebar {
-        width: 280px;
+        width: 256px; /* Keep consistent width */
+    }
+    
+    /* Adjust main content margin for tablet */
+    .main-content {
+        margin-left: 256px !important;
     }
 }
 
 /* Desktop styles */
 @media (min-width: 1024px) {
     #sidebar {
-        position: static !important;
+        position: fixed !important;
         transform: none !important;
     }
     
@@ -83,6 +100,8 @@
 #sidebar {
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 #f1f5f9;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #sidebar::-webkit-scrollbar {
@@ -100,4 +119,9 @@
 
 #sidebar::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+/* Ensure sidebar content doesn't overflow */
+#sidebar > * {
+    max-width: 100%;
 } 

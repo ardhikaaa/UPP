@@ -11,15 +11,30 @@ class GuruController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-{
-    $gurus = Guru::with(['unit'])  
-        ->orderBy('created_at', 'desc')
-        ->paginate(5);
+    public function index(Request $request)
+    {
+        $query = Guru::with(['unit']);
+        
+        // Tambahkan search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nama', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('mapel', 'like', '%' . $searchTerm . '%')
+                  ->orWhereHas('unit', function($subQuery) use ($searchTerm) {
+                      $subQuery->where('unit', 'like', '%' . $searchTerm . '%');
+                  });
+            });
+        }
+        
+        $gurus = $query->orderBy('created_at', 'desc')->paginate(5);
+        
+        // Append search parameter to pagination links
+        $gurus->appends($request->query());
 
-    $units = Unit::all();
-    return view('guru', compact('gurus', 'units'));
-}
+        $units = Unit::all();
+        return view('guru', compact('gurus', 'units'));
+    }
 
 
 

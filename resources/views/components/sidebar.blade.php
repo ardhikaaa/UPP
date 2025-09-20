@@ -17,7 +17,7 @@
     <div class="flex-col items-center justify-between mb-10">
     <a href="/kunjungan_uks">
       <div class="flex items-center space-x-3">
-        <img src="../assets/logo-uks.png" alt="Logo" class="w-15 h-10" />
+        <img src="../../assets/logo-uks.png" alt="Logo" class="w-15 h-10" />
         <h1 class="text-lg font-semibold">UPP</h1>
       </div>
     </a>
@@ -170,7 +170,7 @@
     <div class="w-full">
       <!-- User Info -->
       <div class="flex items-center gap-3 w-full p-3 rounded-lg bg-gray-50 mb-3">
-        <img src="../assets/user.png" alt="User" class="w-10 h-10 rounded-full flex-shrink-0" />
+        <img src="../../assets/user.png" alt="User" class="w-10 h-10 rounded-full flex-shrink-0" />
         <div class="hidden sm:block flex-1 min-w-0">
           <p class="text-sm font-medium truncate">{{ Auth::user()->name }}</p>
           <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>

@@ -17,7 +17,7 @@
     <div class="bg-[#e4e4e4] shadow-sm rounded-lg overflow-hidden">
         <!-- Search Section -->
         <div class="p-6 border-b border-[#142143]/20">
-            <div class="flex flex-col sm:flex-row gap-4">
+            <form method="GET" action="{{ route('obat.index') }}" class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -25,18 +25,20 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" id="searchInput" placeholder="Cari obat..." 
-                               class="block w-full pl-10 pr-3 py-2 border border-[#142143]/30 rounded-lg leading-5 bg-white text-[#142143] placeholder-[#142143]/60 focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama obat atau jumlah..." 
+                               class="block w-full pl-10 pr-3 py-2 border border-[#142143]/30 rounded-lg leading-5 bg-white text-[#142143] placeholder-[#142143]/60 focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]"
+                               autocomplete="off">
                     </div>
                 </div>
-                <div class="flex gap-2">
-                    <button class="px-4 py-2 bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Cari
+                </button>
+                @if(request('search'))
+                    <a href="{{ route('obat.index') }}" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Reset
+                    </a>
+                @endif
+            </form>
         </div>
 
         <!-- Table Section -->
@@ -54,68 +56,133 @@
                 </div>
             @endif
 
-            <table class="w-full text-sm text-left text-[#142143]" id="Table">
-                <thead class="text-xs uppercase bg-[#0072BC] text-white">
-                    <tr>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Nama Obat</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Jumlah</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-[#142143]/20">
-                    @foreach ($obat as $item)
-                    <tr class="hover:bg-[#142143]/5 transition duration-200">
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->nama_obat }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->jumlah }}</td>
-                        <td class="px-6 py-4 flex justify-center">
-                            <div class="flex items-center space-x-2">
-                                <button 
-                                    class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#0072BC]/10 transition duration-200 btn-edit-obat"
-                                    data-id="{{ $item->id }}"
-                                    data-obat="{{ $item->nama_obat }}"
-                                    data-jumlah="{{ $item->jumlah }}"
-                                    data-modal-target="edit-obat-modal" data-modal-toggle="edit-obat-modal"
-                                >
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                                    </svg>
-                                </button>
-                                <form action="{{ route('obat.destroy', $item->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="text-[#ffaf00] hover:text-[#142143] p-1 rounded-lg hover:bg-[#ffaf00]/10 transition duration-200">
+            @if($obat->count() > 0)
+                <table class="w-full text-sm text-left text-[#142143]" id="Table">
+                    <thead class="text-xs uppercase bg-[#0072BC] text-white">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-center">Nama Obat</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-center">Jumlah</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#142143]/20">
+                        @foreach ($obat as $item)
+                        <tr class="hover:bg-[#142143]/5 transition duration-200">
+                            <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $obat->firstItem() + $loop->index }}</td>
+                            <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->nama_obat }}</td>
+                            <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->jumlah }}</td>
+                            <td class="px-6 py-4 flex justify-center">
+                                <div class="flex items-center space-x-2">
+                                    <button 
+                                        class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#0072BC]/10 transition duration-200 btn-edit-obat"
+                                        data-id="{{ $item->id }}"
+                                        data-obat="{{ $item->nama_obat }}"
+                                        data-jumlah="{{ $item->jumlah }}"
+                                        data-modal-target="edit-obat-modal" data-modal-toggle="edit-obat-modal"
+                                    >
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                         </svg>
                                     </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                    <form action="{{ route('obat.destroy', $item->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="text-[#ffaf00] hover:text-[#142143] p-1 rounded-lg hover:bg-[#ffaf00]/10 transition duration-200">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-[#142143]">Tidak ada data obat</h3>
+                    @if(request('search'))
+                        <p class="mt-1 text-sm text-gray-500">Tidak ditemukan hasil untuk pencarian "<span class="font-medium">{{ request('search') }}</span>"</p>
+                        <div class="mt-6">
+                            <a href="{{ route('obat.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#0072BC] hover:bg-[#142143] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0072BC]">
+                                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                                Reset Pencarian
+                            </a>
+                        </div>
+                    @else
+                        <p class="mt-1 text-sm text-gray-500">Mulai dengan menambahkan data obat baru.</p>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <!-- Pagination -->
-        <div class="px-6 py-4 border-t border-[#142143]/20">
-            <div class="flex items-center justify-between">
-                <div class="text-sm text-[#142143]">
-                    Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">{{ $obat->count() }}</span> dari <span class="font-medium">{{ $obat->count() }}</span> hasil
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button class="px-3 py-1 text-sm bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
-                        Sebelumnya
-                    </button>
-                    <button class="px-3 py-1 text-sm bg-[#0072BC] text-white rounded-lg">1</button>
-                    <button class="px-3 py-1 text-sm bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
-                        Selanjutnya
-                    </button>
+        @if($obat->hasPages())
+            <div class="px-6 py-4 border-t border-[#142143]/20">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-[#142143]">
+                        @if(request('search'))
+                            Menampilkan
+                            <span class="font-medium">{{ $obat->firstItem() ?? 0 }}</span>
+                            sampai
+                            <span class="font-medium">{{ $obat->lastItem() ?? 0 }}</span>
+                            dari
+                            <span class="font-medium">{{ $obat->total() }}</span> hasil pencarian untuk "<span class="font-medium text-[#0072BC]">{{ request('search') }}</span>"
+                        @else
+                            Menampilkan
+                            <span class="font-medium">{{ $obat->firstItem() ?? 0 }}</span>
+                            sampai
+                            <span class="font-medium">{{ $obat->lastItem() ?? 0 }}</span>
+                            dari
+                            <span class="font-medium">{{ $obat->total() }}</span> hasil
+                        @endif
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        {{-- Tombol Sebelumnya --}}
+                        <a href="{{ $obat->previousPageUrl() ?? '#' }}"
+                        class="px-3 py-1 text-sm rounded-lg transition duration-200
+                                {{ $obat->onFirstPage() 
+                                    ? 'bg-[#e4e4e4] text-gray-400 cursor-not-allowed' 
+                                    : 'bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143]' }}">
+                            Sebelumnya
+                        </a>
+
+                        {{-- Nomor halaman --}}
+                        @php
+                            $start = max(1, $obat->currentPage() - 2);
+                            $end = min($obat->lastPage(), $obat->currentPage() + 2);
+                        @endphp
+
+                        @for ($i = $start; $i <= $end; $i++)
+                            <a href="{{ $obat->url($i) }}"
+                            class="px-3 py-1 text-sm rounded-lg transition duration-200
+                                    {{ $obat->currentPage() == $i 
+                                        ? 'bg-[#0072BC] text-white' 
+                                        : 'bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143]' }}">
+                                {{ $i }}
+                            </a>
+                        @endfor
+
+                        {{-- Tombol Selanjutnya --}}
+                        <a href="{{ $obat->nextPageUrl() ?? '#' }}"
+                        class="px-3 py-1 text-sm rounded-lg transition duration-200
+                                {{ $obat->hasMorePages() 
+                                    ? 'bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143]' 
+                                    : 'bg-[#e4e4e4] text-gray-400 cursor-not-allowed' }}">
+                            Selanjutnya
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 
     <!-- Modal Tambah Unit -->
@@ -213,34 +280,5 @@
         });
     });
 
-    // Enhanced search functionality
-    document.getElementById('searchInput').addEventListener('keyup', function () {
-    const searchValue = this.value.toLowerCase();
-    const rows = document.querySelectorAll('#Table tbody tr');
-    let visibleCount = 0;
-
-    rows.forEach((row, index) => {
-        const cells = row.querySelectorAll('td');
-        let found = false;
-
-        // Search in name, degree, and subject columns
-        for (let i = 1; i < cells.length - 1; i++) {
-        if (cells[i].textContent.toLowerCase().includes(searchValue)) {
-            found = true;
-            break;
-        }
-        }
-
-        if (found) {
-        row.style.display = '';
-        row.style.animation = `fadeIn 0.3s ease ${index * 0.1}s both`;
-        visibleCount++;
-        } else {
-        row.style.display = 'none';
-        }
-    });
-
-    // Update pagination info
-    updatePaginationInfo(visibleCount);
-    });
+    // Search functionality is now handled by server-side form submission
 </script>

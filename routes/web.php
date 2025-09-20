@@ -38,6 +38,7 @@ Route::get('/report/obat', [ReportController::class, 'obat'])->name('report.obat
 Route::get('/report/kunjungan', [ReportController::class, 'kunjungan'])->name('report.kunjungan');
 // History siswa
 Route::get('/report/siswa', [ReportController::class, 'siswa'])->name('report.siswa');
+Route::get('/report/siswa/{siswaId}', [ReportController::class, 'siswaDetail'])->name('report.siswa.detail');
 
 
 Route::middleware('auth')->group(function () {

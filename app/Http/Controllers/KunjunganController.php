@@ -17,11 +17,40 @@ class KunjunganController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kunjungan = Kunjungan::with(['rombel.unit', 'rombel.kelas', 'rombel.siswa', 'obats', 'guru'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $query = Kunjungan::with(['rombel.unit', 'rombel.kelas', 'rombel.siswa', 'obats', 'guru']);
+        
+        // Tambahkan search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('diagnosa', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('pengecekan', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('anamnesa', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('tindakan', 'like', '%' . $searchTerm . '%')
+                  ->orWhereHas('rombel.siswa', function($subQuery) use ($searchTerm) {
+                      $subQuery->where('nama_siswa', 'like', '%' . $searchTerm . '%');
+                  })
+                  ->orWhereHas('rombel.unit', function($subQuery) use ($searchTerm) {
+                      $subQuery->where('unit', 'like', '%' . $searchTerm . '%');
+                  })
+                  ->orWhereHas('rombel.kelas', function($subQuery) use ($searchTerm) {
+                      $subQuery->where('kelas', 'like', '%' . $searchTerm . '%');
+                  })
+                  ->orWhereHas('guru', function($subQuery) use ($searchTerm) {
+                      $subQuery->where('nama', 'like', '%' . $searchTerm . '%');
+                  })
+                  ->orWhereHas('obats', function($subQuery) use ($searchTerm) {
+                      $subQuery->where('nama_obat', 'like', '%' . $searchTerm . '%');
+                  });
+            });
+        }
+        
+        $kunjungan = $query->orderBy('created_at', 'desc')->paginate(10);
+        
+        // Append search parameter to pagination links
+        $kunjungan->appends($request->query());
 
         $rombel = Rombel::all();            
         $obat   = Obat::all();            
@@ -63,15 +92,8 @@ class KunjunganController extends Controller
             'tindakan'      => 'required|string',
         ]);
 
-        // Validasi tambahan: pastikan obat yang dipilih memiliki stok > 0
-        foreach ($request->obat_ids as $obatId) {
-            $obat = Obat::findOrFail($obatId);
-            if ($obat->jumlah <= 0) {
-                return back()
-                    ->withInput()
-                    ->with('error', "Obat '{$obat->nama_obat}' tidak dapat dipilih karena stok habis. Silakan tambahkan stok obat di halaman Obat terlebih dahulu.");
-            }
-        }
+        // Untuk update, kita tidak perlu menolak obat dengan stok 0.
+        // Validasi stok akan dilakukan berbasis delta (kenaikan saja).
 
         $rombel = Rombel::where('unit_id', $request->unit_id)
             ->where('kelas_id', $request->kelas_id)
@@ -193,34 +215,31 @@ class KunjunganController extends Controller
             ->where('siswa_id', $request->siswa_id)
             ->firstOrFail();
 
-        $kunjungan = Kunjungan::findOrFail($id);
+        $kunjungan = Kunjungan::with('obats')->findOrFail($id);
 
-        // Kembalikan stok obat lama + catat history pengembalian
-        foreach ($kunjungan->obats as $obat) {
-            $obat->jumlah += $obat->pivot->jumlah_obat;
-            $obat->save();
-
-            ObatHistory::create([
-                'obat_id'    => $obat->id,
-                'jumlah'     => $obat->pivot->jumlah_obat,
-                'tipe'       => 'masuk',
-                'tanggal'    => now(),
-                'keterangan' => "Rollback stok dari update kunjungan ID {$kunjungan->id}",
-            ]);
+        // Siapkan mapping jumlah lama
+        $oldMap = [];
+        foreach ($kunjungan->obats as $oldObat) {
+            $oldMap[$oldObat->id] = (int) $oldObat->pivot->jumlah_obat;
         }
 
-        // Hapus relasi obat lama
-        $kunjungan->obats()->detach();
+        // Siapkan mapping jumlah baru dari request
+        $newMap = [];
+        foreach ($request->obat_ids as $idx => $obatId) {
+            $newMap[(int) $obatId] = (int) $request->jumlah_obat[$idx];
+        }
 
-        // Validasi stok obat baru
-        foreach ($request->obat_ids as $index => $obatId) {
-            $obat = Obat::findOrFail($obatId);
-            $jumlahObat = $request->jumlah_obat[$index];
-
-            if ($obat->jumlah < $jumlahObat) {
-                return back()
-                    ->withInput()
-                    ->with('error', "Stok obat '{$obat->nama_obat}' tidak mencukupi! Stok tersedia: {$obat->jumlah}, yang diminta: {$jumlahObat}. Silakan tambahkan stok obat di halaman Obat terlebih dahulu.");
+        // Validasi stok hanya untuk delta positif (kenaikan)
+        foreach ($newMap as $obatId => $newQty) {
+            $oldQty = $oldMap[$obatId] ?? 0;
+            $delta = $newQty - $oldQty;
+            if ($delta > 0) {
+                $obat = Obat::findOrFail($obatId);
+                if ($obat->jumlah < $delta) {
+                    return back()
+                        ->withInput()
+                        ->with('error', "Stok obat '{$obat->nama_obat}' tidak mencukupi! Stok tersedia: {$obat->jumlah}, tambahan diminta: {$delta}. Tambahkan stok di halaman Obat terlebih dahulu.");
+                }
             }
         }
 
@@ -235,26 +254,47 @@ class KunjunganController extends Controller
             'tindakan'    => $request->tindakan,
         ]);
 
-        // Tambahkan obat baru + kurangi stok + catat history keluar
-        foreach ($request->obat_ids as $index => $obatId) {
-            $obat = Obat::findOrFail($obatId);
-            $jumlahObat = $request->jumlah_obat[$index];
+        // Proses stok berbasis delta + catat history sesuai arah perubahan
+        // Dan siapkan data sync pivot
+        $syncData = [];
 
-            // Kurangi stok
-            $obat->decrement('jumlah', $jumlahObat);
+        // Semua obat yang terlibat (gabungan lama dan baru)
+        $allObatIds = array_unique(array_merge(array_keys($oldMap), array_keys($newMap)));
 
-            // Attach ke kunjungan
-            $kunjungan->obats()->attach($obatId, ['jumlah_obat' => $jumlahObat]);
+        foreach ($allObatIds as $obatId) {
+            $oldQty = $oldMap[$obatId] ?? 0;
+            $newQty = $newMap[$obatId] ?? 0;
+            $delta = $newQty - $oldQty;
 
-            // Catat history keluar
-            ObatHistory::create([
-                'obat_id'    => $obat->id,
-                'jumlah'     => $jumlahObat,
-                'tipe'       => 'keluar',
-                'tanggal'    => now(),
-                'keterangan' => "Obat dikeluarkan (update) untuk kunjungan ID {$kunjungan->id}",
-            ]);
+            if ($delta > 0) {
+                $obat = Obat::findOrFail($obatId);
+                $obat->decrement('jumlah', $delta);
+                ObatHistory::create([
+                    'obat_id'    => $obat->id,
+                    'jumlah'     => $delta,
+                    'tipe'       => 'keluar',
+                    'tanggal'    => now(),
+                    'keterangan' => "Penyesuaian (kenaikan) kunjungan ID {$kunjungan->id}",
+                ]);
+            } elseif ($delta < 0) {
+                $obat = Obat::findOrFail($obatId);
+                $obat->increment('jumlah', abs($delta));
+                ObatHistory::create([
+                    'obat_id'    => $obat->id,
+                    'jumlah'     => abs($delta),
+                    'tipe'       => 'masuk',
+                    'tanggal'    => now(),
+                    'keterangan' => "Penyesuaian (penurunan) kunjungan ID {$kunjungan->id}",
+                ]);
+            }
+
+            if ($newQty > 0) {
+                $syncData[$obatId] = ['jumlah_obat' => $newQty];
+            }
         }
+
+        // Sinkronkan pivot sesuai jumlah baru (hapus yang tidak ada)
+        $kunjungan->obats()->sync($syncData);
 
         return redirect()->route('kunjungan.index')->with('success', 'Data kunjungan berhasil diperbarui');
     }

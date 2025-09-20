@@ -10,9 +10,27 @@ class SiswaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $siswa = Siswa::all(); // Ambil semua data siswa
+        $query = Siswa::query();
+        
+        // Tambahkan search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nis', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('nama_siswa', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('jenis_kelamin', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('no_telp_siswa', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('no_telp_ortu', 'like', '%' . $searchTerm . '%');
+            });
+        }
+        
+        $siswa = $query->orderBy('created_at', 'desc')->paginate(10);
+        
+        // Append search parameter to pagination links
+        $siswa->appends($request->query());
+        
         return view('siswa', compact('siswa'));
     }
 

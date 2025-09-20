@@ -11,9 +11,24 @@ class halaman_obatController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $obat = Obat::all();
+        $query = Obat::query();
+        
+        // Tambahkan search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('nama_obat', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('jumlah', 'like', '%' . $searchTerm . '%');
+            });
+        }
+        
+        $obat = $query->orderBy('created_at', 'desc')->paginate(10);
+        
+        // Append search parameter to pagination links
+        $obat->appends($request->query());
+        
         return view('obat', compact('obat'));
     }
 

@@ -17,7 +17,7 @@
     <div class="bg-[#e4e4e4] shadow-sm rounded-lg overflow-hidden">
         <!-- Search Section -->
         <div class="p-6 border-b border-[#142143]/20">
-            <div class="flex flex-col sm:flex-row gap-4">
+            <form method="GET" action="{{ route('kunjungan.index') }}" class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -25,18 +25,20 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <input type="text" id="searchInput" placeholder="Cari info kunjungan..." 
-                               class="block w-full pl-10 pr-3 py-2 border border-[#142143]/30 rounded-lg leading-5 bg-white text-[#142143] placeholder-[#142143]/60 focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama siswa, diagnosa, obat, dll..." 
+                               class="block w-full pl-10 pr-3 py-2 border border-[#142143]/30 rounded-lg leading-5 bg-white text-[#142143] placeholder-[#142143]/60 focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]"
+                               autocomplete="off">
                     </div>
                 </div>
-                <div class="flex gap-2">
-                    <button class="px-4 py-2 bg-[#e4e4e4] hover:bg-[#142143]/10 text-[#142143] rounded-lg transition duration-200">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
+                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Cari
+                </button>
+                @if(request('search'))
+                    <a href="{{ route('kunjungan.index') }}" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Reset
+                    </a>
+                @endif
+            </form>
         </div>
 
         <!-- Table Section -->
@@ -91,105 +93,136 @@
                 </div>
             @endif
 
-            <table class="w-full text-sm text-left text-[#142143]" id="Table">
-                <thead class="text-xs uppercase bg-[#0072BC] text-white">
-                    <tr>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Unit/Kelas</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Nama Siswa</th>
-                        {{-- <th scope="col" class="px-6 py-4 font-medium text-center">Pengecekan</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Anamnesa</th> --}}
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Diagnosa</th>
-                        {{-- <th scope="col" class="px-6 py-4 font-medium text-center">Tindakan</th> --}}
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Obat</th>
-                        {{-- <th scope="col" class="px-6 py-4 font-medium text-center">Guru</th> --}}
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Tanggal</th>
-                        <th scope="col" class="px-6 py-4 font-medium text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-[#142143]/20" id="#Table">
-                    @foreach ($kunjungan as $item)
-                    <tr class="hover:bg-[#142143]/5 transition duration-200">
-                        <td class="px-6 py-4 font-medium text-[#142143]">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="font-medium text-[#142143]">{{ $item->rombel->unit->unit }}</div>
-                        <div class="text-sm text-gray-500">{{ $item->rombel->kelas->kelas }}</div>
-                        </td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->rombel->siswa->nama_siswa }}</td>
-                        {{-- <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->pengecekan }}</td>
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->anamnesa }}</td> --}}
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->diagnosa }}</td>
-                        {{-- <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->tindakan }}</td> --}}
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">
-                            @if($item->obats && $item->obats->count() > 0)
-                                @foreach($item->obats as $obatItem)
-                                    <div class="text-sm">{{ $obatItem->nama_obat }} ({{ $obatItem->pivot->jumlah_obat }})</div>
-                                @endforeach
-                            @else
-                                N/A
-                            @endif
-                        </td>
-                        {{-- <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->guru->nama }}</td> --}}
-                        <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('l, d F Y') }}</td>
-                        <td class="px-6 py-4 flex justify-center">
-                            <a href="{{route('kunjungan.show', $item->id)}}">
-                                <button data-modal-target="show-kunjungan-modal" data-modal-toggle="show-kunjungan-modal"
-                                    class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#0072BC]/10 transition duration-200">
+            @if($kunjungan->count() > 0)
+                <table class="w-full text-sm text-left text-[#142143]" id="Table">
+                    <thead class="text-xs uppercase bg-[#0072BC] text-white">
+                        <tr>
+                            <th scope="col" class="px-6 py-4 font-medium text-center">No</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-center">Unit/Kelas</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-center">Nama Siswa</th>
+                            {{-- <th scope="col" class="px-6 py-4 font-medium text-center">Pengecekan</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-center">Anamnesa</th> --}}
+                            <th scope="col" class="px-6 py-4 font-medium text-center">Diagnosa</th>
+                            {{-- <th scope="col" class="px-6 py-4 font-medium text-center">Tindakan</th> --}}
+                            <th scope="col" class="px-6 py-4 font-medium text-center">Obat</th>
+                            {{-- <th scope="col" class="px-6 py-4 font-medium text-center">Guru</th> --}}
+                            <th scope="col" class="px-6 py-4 font-medium text-center">Tanggal</th>
+                            <th scope="col" class="px-6 py-4 font-medium text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#142143]/20" id="#Table">
+                        @foreach ($kunjungan as $item)
+                        <tr class="hover:bg-[#142143]/5 transition duration-200">
+                            <td class="px-6 py-4 font-medium text-[#142143]">{{ $kunjungan->firstItem() + $loop->index }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-[#142143]">{{ $item->rombel->unit->unit }}</div>
+                            <div class="text-sm text-gray-500">{{ $item->rombel->kelas->kelas }}</div>
+                            </td>
+                            <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->rombel->siswa->nama_siswa }}</td>
+                            {{-- <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->pengecekan }}</td>
+                            <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->anamnesa }}</td> --}}
+                            <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->diagnosa }}</td>
+                            {{-- <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->tindakan }}</td> --}}
+                            <td class="px-6 py-4 font-medium text-[#142143] text-center">
+                                @if($item->obats && $item->obats->count() > 0)
+                                    @foreach($item->obats as $obatItem)
+                                        <div class="text-sm">{{ $obatItem->nama_obat }} ({{ $obatItem->pivot->jumlah_obat }})</div>
+                                    @endforeach
+                                @else
+                                    N/A
+                                @endif
+                            </td>
+                            {{-- <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ $item->guru->nama }}</td> --}}
+                            <td class="px-6 py-4 font-medium text-[#142143] text-center">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('l, d F Y') }}</td>
+                            <td class="px-6 py-4 flex justify-center">
+                                <a href="{{route('kunjungan.show', $item->id)}}">
+                                    <button data-modal-target="show-kunjungan-modal" data-modal-toggle="show-kunjungan-modal"
+                                        class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#0072BC]/10 transition duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                    </button>
+                                </a>
+                                <button 
+                                    class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-obat"
+                                    data-id         ="{{ $item->id }}"
+                                    data-unit-id    ="{{ $item->rombel->unit->id }}"
+                                    data-kelas-id   ="{{ $item->rombel->kelas->id }}"
+                                    data-siswa-id   ="{{ $item->rombel->siswa->id }}"
+                                    data-pengecekan ="{{ $item->pengecekan }}"
+                                    data-anamnesa   ="{{ $item->anamnesa }}"
+                                    data-diagnosa   ="{{ $item->diagnosa }}"
+                                    data-tindakan   ="{{ $item->tindakan }}"
+                                    data-obat-ids   ="{{ $item->obats ? $item->obats->pluck('id')->implode(',') : '' }}"
+                                    data-obat-names ="{{ $item->obats ? $item->obats->pluck('nama_obat')->implode(',') : '' }}"
+                                    data-jumlahs    ="{{ $item->obats ? $item->obats->pluck('pivot.jumlah_obat')->implode(',') : '' }}"
+                                    data-guru-id    ="{{ $item->guru->id }}"
+                                    data-tanggal    ="{{ $item->tanggal }}"
+                                    data-modal-target="edit-kunjungan-modal" data-modal-toggle="edit-kunjungan-modal"
+                                >
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                     </svg>
                                 </button>
-                            </a>
-                            <button 
-                                class="text-[#0072BC] hover:text-[#142143] p-1 rounded-lg hover:bg-[#1a5d94]/10 transition duration-200 btn-edit-obat"
-                                data-id         ="{{ $item->id }}"
-                                data-unit-id    ="{{ $item->rombel->unit->id }}"
-                                data-kelas-id   ="{{ $item->rombel->kelas->id }}"
-                                data-siswa-id   ="{{ $item->rombel->siswa->id }}"
-                                data-pengecekan ="{{ $item->pengecekan }}"
-                                data-anamnesa   ="{{ $item->anamnesa }}"
-                                data-diagnosa   ="{{ $item->diagnosa }}"
-                                data-tindakan   ="{{ $item->tindakan }}"
-                                data-obat-ids   ="{{ $item->obats ? $item->obats->pluck('id')->implode(',') : '' }}"
-                                data-obat-names ="{{ $item->obats ? $item->obats->pluck('nama_obat')->implode(',') : '' }}"
-                                data-jumlahs    ="{{ $item->obats ? $item->obats->pluck('pivot.jumlah_obat')->implode(',') : '' }}"
-                                data-guru-id    ="{{ $item->guru->id }}"
-                                data-tanggal    ="{{ $item->tanggal }}"
-                                data-modal-target="edit-kunjungan-modal" data-modal-toggle="edit-kunjungan-modal"
-                            >
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                <form action="{{ route('kunjungan.destroy', $item->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="text-[#ffaf00] hover:text-[#142143] p-1 rounded-lg hover:bg-[#ffaf00]/10 transition duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                <div class="text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <h3 class="mt-2 text-sm font-medium text-[#142143]">Tidak ada data kunjungan</h3>
+                    @if(request('search'))
+                        <p class="mt-1 text-sm text-gray-500">Tidak ditemukan hasil untuk pencarian "<span class="font-medium">{{ request('search') }}</span>"</p>
+                        <div class="mt-6">
+                            <a href="{{ route('kunjungan.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#0072BC] hover:bg-[#142143] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0072BC]">
+                                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
-                            </button>
-                            <form action="{{ route('kunjungan.destroy', $item->id) }}" method="POST" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                @csrf
-                                @method('DELETE')
-                                <button class="text-[#ffaf00] hover:text-[#142143] p-1 rounded-lg hover:bg-[#ffaf00]/10 transition duration-200">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                    </svg>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                                Reset Pencarian
+                            </a>
+                        </div>
+                    @else
+                        <p class="mt-1 text-sm text-gray-500">Mulai dengan menambahkan data kunjungan baru.</p>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <!-- Pagination -->
         <div class="px-6 py-4 border-t border-[#142143]/20">
             <div class="flex items-center justify-between">
                 <div class="text-sm text-[#142143]">
-                    Menampilkan
-                    <span class="font-medium">{{ $kunjungan->firstItem() ?? 0 }}</span>
-                    sampai
-                    <span class="font-medium">{{ $kunjungan->lastItem() ?? 0 }}</span>
-                    dari
-                    <span class="font-medium">{{ $kunjungan->total() }}</span> hasil
+                    @if(request('search'))
+                        Menampilkan
+                        <span class="font-medium">{{ $kunjungan->firstItem() ?? 0 }}</span>
+                        sampai
+                        <span class="font-medium">{{ $kunjungan->lastItem() ?? 0 }}</span>
+                        dari
+                        <span class="font-medium">{{ $kunjungan->total() }}</span> hasil pencarian untuk "<span class="font-medium text-[#0072BC]">{{ request('search') }}</span>"
+                    @else
+                        Menampilkan
+                        <span class="font-medium">{{ $kunjungan->firstItem() ?? 0 }}</span>
+                        sampai
+                        <span class="font-medium">{{ $kunjungan->lastItem() ?? 0 }}</span>
+                        dari
+                        <span class="font-medium">{{ $kunjungan->total() }}</span> hasil
+                    @endif
                 </div>
 
                 <div class="flex items-center space-x-2">
@@ -493,6 +526,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         obatJumlahMap[obatId] = jumlahArray[index];
                     }
                 });
+                // Expose previous jumlah per obat for this edit session
+                window.editObatJumlahMap = obatJumlahMap;
                 
                 // Uncheck all checkboxes first
                 document.querySelectorAll('.edit-obat-checkbox').forEach(checkbox => {
@@ -741,36 +776,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Enhanced search functionality
-    document.getElementById('searchInput').addEventListener('keyup', function () {
-    const searchValue = this.value.toLowerCase();
-    const rows = document.querySelectorAll('#Table tbody tr');
-    let visibleCount = 0;
-
-    rows.forEach((row, index) => {
-        const cells = row.querySelectorAll('td');
-        let found = false;
-
-        // Search in name, degree, and subject columns
-        for (let i = 1; i < cells.length - 1; i++) {
-        if (cells[i].textContent.toLowerCase().includes(searchValue)) {
-            found = true;
-            break;
-        }
-        }
-
-        if (found) {
-        row.style.display = '';
-        row.style.animation = `fadeIn 0.3s ease ${index * 0.1}s both`;
-        visibleCount++;
-        } else {
-        row.style.display = 'none';
-        }
-    });
-
-    // Update pagination info
-    updatePaginationInfo(visibleCount);
-    });
+    // Search functionality is now handled by server-side form submission
 
     // Handle multiple obat selection for add modal (checkbox)
     const obatCheckboxes = document.querySelectorAll('.obat-checkbox');
@@ -835,14 +841,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const obatName = label.textContent.split('(')[0].trim(); // Remove stock info from name
             const stockText = label.textContent.match(/\(Stok: (\d+)\)/);
             const maxStock = stockText ? parseInt(stockText[1]) : 999;
+            const obatId = checkbox.value;
+            const prevJumlah = (window.editObatJumlahMap && window.editObatJumlahMap[obatId]) ? parseInt(window.editObatJumlahMap[obatId]) : 0;
+            const maxAvailable = maxStock + prevJumlah;
             const existingValue = existingValues[obatName] || '';
             
             const div = document.createElement('div');
             div.className = 'mb-2';
             div.innerHTML = `
                 <label class="block mb-1 text-sm font-medium text-[#142143]">Jumlah ${obatName}</label>
-                <input type="number" name="jumlah_obat[]" min="1" max="${maxStock}" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" value="${existingValue}" required>
-                <p class="text-xs text-gray-500 mt-1">Maksimal: ${maxStock} (stok tersedia)</p>
+                <input type="number" name="jumlah_obat[]" min="1" max="${maxAvailable}" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" placeholder="Masukkan jumlah obat" value="${existingValue}" required>
+                <p class="text-xs text-gray-500 mt-1">Maksimal: ${maxAvailable} (stok ${maxStock} + sebelumnya ${prevJumlah})</p>
             `;
             editJumlahObatContainer.appendChild(div);
         });

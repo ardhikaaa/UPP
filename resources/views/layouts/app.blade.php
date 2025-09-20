@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Uks') }}</title>
+    <title>{{ config('app.name', 'UKS Pesat') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -20,7 +20,7 @@
         <x-sidebar />
 
         <!-- Main Content -->
-        <div class="flex-1 lg:ml-0">
+        <div class="flex-1 ml-64 lg:ml-64 main-content" style="margin-left: 256px;">
             <!-- Page Heading -->
             @isset($header)
                 <header class="bg-white shadow">
