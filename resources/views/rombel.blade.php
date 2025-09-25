@@ -48,16 +48,24 @@
                 <div class="flex-1">
                     <label class="block mb-2 text-sm font-medium text-[#142143]">Pilih File Excel</label>
                     <div class="relative">
-                        <input type="file" name="file" required accept=".xlsx,.xls,.csv" 
-                               class="block w-full text-sm text-[#142143] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#0072BC] file:text-white hover:file:bg-[#142143] file:cursor-pointer file:transition file:duration-200 border border-[#142143]/30 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]">
+                        <input type="file" name="file" required accept=".xlsx,.xls" 
+                            class="block w-full text-sm text-[#142143] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#0072BC] file:text-white hover:file:bg-[#142143] file:cursor-pointer file:transition file:duration-200 border border-[#142143]/30 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-[#1a5d94] focus:border-[#1a5d94]">
                     </div>
                 </div>
-                <button type="submit" class="inline-flex items-center px-6 py-2 bg-[#0072BC] hover:bg-[#142143] focus:ring-4 focus:ring-[#1a5d94]/30 text-white text-sm font-medium rounded-lg transition duration-200 shadow-sm">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
-                    </svg>
-                    Import Excel
-                </button>
+                <div class="flex gap-3">
+                    <button type="submit" class="inline-flex items-center px-6 py-2 bg-[#0072BC] hover:bg-[#142143] focus:ring-4 focus:ring-[#1a5d94]/30 text-white text-sm font-medium rounded-lg transition duration-200 shadow-sm">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                        </svg>
+                        Import Excel
+                    </button>
+                    <a href="https://drive.google.com/drive/folders/1cFCMAVx65AKGvjIFZZgPqG1N43SoroOR?usp=sharing" target="_blank" class="inline-flex items-center px-6 py-2 bg-white border border-[#0072BC] hover:bg-[#0072BC] hover:text-white focus:ring-4 focus:ring-[#1a5d94]/30 text-[#0072BC] text-sm font-medium rounded-lg transition duration-200 shadow-sm">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Unduh Template
+                    </a>
+                </div>
             </form>
             <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <div class="flex items-start">
@@ -71,6 +79,7 @@
                 </div>
             </div>
         </div>
+        
 
         <!-- Table Section -->
         <div class="overflow-x-auto">
