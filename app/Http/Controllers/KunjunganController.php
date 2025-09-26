@@ -9,6 +9,7 @@ use App\Models\Obat;
 use App\Models\ObatHistory;
 use App\Models\Rombel;
 use App\Models\Siswa;
+use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -55,8 +56,9 @@ class KunjunganController extends Controller
         $rombel = Rombel::all();            
         $obat   = Obat::all();            
         $guru   = Guru::all();            
+        $units  = Unit::all();
 
-        return view('kunjungan_uks', compact('kunjungan', 'rombel', 'obat', 'guru'));
+        return view('kunjungan_uks', compact('kunjungan', 'rombel', 'obat', 'guru', 'units'));
     }
 
 
@@ -68,8 +70,9 @@ class KunjunganController extends Controller
         $rombel = Rombel::all();
         $obat   = Obat::all();
         $guru   = Guru::all();
+        $units  = Unit::all();
 
-        return view('kunjungan.create', compact('rombel', 'obat', 'guru'));
+        return view('kunjungan.create', compact('rombel', 'obat', 'guru', 'units'));
     }
 
     /**
@@ -124,6 +127,8 @@ class KunjunganController extends Controller
         ]);
 
         // ✅ Catat obat yang diberikan
+        $siswa = Siswa::findOrFail($request->siswa_id);
+        $siswaName = $siswa->nama_siswa;
         foreach ($request->obat_ids as $index => $obatId) {
             $jumlahObat = $request->jumlah_obat[$index];
 
@@ -146,7 +151,7 @@ class KunjunganController extends Controller
                 'jumlah'     => $jumlahObat,
                 'tipe'       => 'keluar',
                 'tanggal'    => now(),
-                'keterangan' => "Obat dikeluarkan untuk kunjungan ID {$kunjungan->id}",
+                'keterangan' => "Obat dikeluarkan untuk siswa {$siswaName}",
             ]);
         }
 
@@ -175,8 +180,9 @@ class KunjunganController extends Controller
         $rombel = Rombel::all();
         $obat = Obat::all();
         $guru = Guru::all();
+        $units = Unit::all();
 
-        return view('kunjungan_uks', compact('kunjungan', 'rombel', 'obat', 'guru', 'id'));
+        return view('kunjungan_uks', compact('kunjungan', 'rombel', 'obat', 'guru', 'units', 'id'));
     }
 
     /**

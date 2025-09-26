@@ -290,12 +290,11 @@
                         <label for="unit_id" class="block mb-2 text-sm font-medium text-[#142143]">Unit</label>
                         <select name="unit_id" id="unit_id" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
                             <option value="">-- Pilih Unit --</option>
-                            @php
-                                $uniqueUnits = $rombel->unique('unit_id');
-                            @endphp
-                            @foreach ($uniqueUnits as $r)
-                                <option value="{{ $r->unit->id }}">{{ $r->unit->unit }}</option>
-                            @endforeach
+                            @isset($units)
+                                @foreach ($units as $u)
+                                    <option value="{{ $u->id }}">{{ $u->unit }}</option>
+                                @endforeach
+                            @endisset
                         </select>
                     </div>
                     <div>
@@ -390,12 +389,11 @@
                             <label for="edit-unit_id" class="block mb-2 text-sm font-medium text-[#142143]">Unit</label>
                             <select name="unit_id" id="edit-unit_id" class="bg-white border border-[#142143]/30 text-[#142143] text-sm rounded-lg focus:ring-[#1a5d94] focus:border-[#1a5d94] block w-full p-2.5" required>
                                 <option value="">-- Pilih Unit --</option>
-                                @php
-                                    $uniqueUnits = $rombel->unique('unit_id');
-                                @endphp
-                                @foreach ($uniqueUnits as $r)
-                                    <option value="{{ $r->unit->id }}">{{ $r->unit->unit }}</option>
-                                @endforeach
+                                @isset($units)
+                                    @foreach ($units as $u)
+                                        <option value="{{ $u->id }}">{{ $u->unit }}</option>
+                                    @endforeach
+                                @endisset
                             </select>
                         </div>
                         <div>

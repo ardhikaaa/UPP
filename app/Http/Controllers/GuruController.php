@@ -29,7 +29,7 @@ class GuruController extends Controller
             });
         }
         
-        $gurus = $query->orderBy('created_at', 'desc')->paginate(5);
+        $gurus = $query->orderBy('created_at', 'desc')->paginate(50);
         
         // Append search parameter to pagination links
         $gurus->appends($request->query());

@@ -41,6 +41,10 @@ Route::get('/report/kunjungan', [ReportController::class, 'kunjungan'])->name('r
 // History siswa
 Route::get('/report/siswa', [ReportController::class, 'siswa'])->name('report.siswa');
 Route::get('/report/siswa/{siswaId}', [ReportController::class, 'siswaDetail'])->name('report.siswa.detail');
+// History guru
+Route::get('/report/guru', [ReportController::class, 'guru'])->name('report.guru');
+Route::get('/report/guru/{nama}/{mapel}/{unitId}', [ReportController::class, 'guruDetail'])->name('report.guru.detail');
+Route::get('/report/guru/{nama}/{mapel}/{unitId}/export/pdf', [ReportController::class, 'guruDetailExportPdf'])->name('report.guru.detail.export.pdf');
 
 // Export pdf
 Route::get('/report/obat/export/pdf', [ReportObatController::class, 'exportPdf'])->name('report.obat.export.pdf');

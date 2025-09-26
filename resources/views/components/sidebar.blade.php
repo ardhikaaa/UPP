@@ -17,8 +17,8 @@
     <div class="flex-col items-center justify-between mb-10">
     <a href="/kunjungan_uks">
       <div class="flex items-center space-x-3">
-        <img src="../../assets/logo-uks.png" alt="Logo" class="w-15 h-10" />
-        <h1 class="text-lg font-semibold">UPP</h1>
+        <img src="../../../../assets/logo-uks.png" alt="Logo" class="w-15 h-10" />
+        <h1 class="text-lg font-semibold">UKS</h1>
       </div>
     </a>
       <!-- Close button for mobile -->
@@ -120,10 +120,10 @@
       <!-- Dropdown Menu for Report -->
       <div class="relative">
         <button type="button" class="dropdown-toggle flex items-center justify-between w-full gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
-          {{ request()->is('report/obat*') || request()->is('report/siswa*') || request()->is('report/kunjungan*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}"
+          {{ request()->is('report/obat*') || request()->is('report/siswa*') || request()->is('report/kunjungan*') || request()->is('report/guru*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}"
           onclick="toggleDropdown('master-report-dropdown')">
           <div class="flex items-center gap-4">
-            <svg id="dropdown-icon" class="w-4 h-4 {{ request()->is('report/obat*') || request()->is('report/siswa*') || request()->is('report/kunjungan*') ? 'text-yellow-600' : 'text-gray-600' }}" fill="currentColor" viewBox="0 0 24 24">
+            <svg id="dropdown-icon" class="w-4 h-4 {{ request()->is('report/obat*') || request()->is('report/siswa*') || request()->is('report/kunjungan*') || request()->is('report/guru*') ? 'text-yellow-600' : 'text-gray-600' }}" fill="currentColor" viewBox="0 0 24 24">
              <path d="m14,7V.46c.913.346,1.753.879,2.465,1.59l3.484,3.486c.712.711,1.245,1.551,1.591,2.464h-6.54c-.552,0-1-.449-1-1Zm7.976,3h-6.976c-1.654,0-3-1.346-3-3V.024c-.161-.011-.322-.024-.485-.024h-4.515C4.243,0,2,2.243,2,5v9h3.965l1.703-2.555c.197-.296.542-.473.894-.443.356.022.673.232.833.551l2.229,4.459,1.044-1.566c.186-.278.498-.445.832-.445h4.5c.552,0,1,.448,1,1s-.448,1-1,1h-3.965l-1.703,2.555c-.186.279-.499.445-.832.445-.021,0-.042,0-.062-.002-.356-.022-.673-.232-.833-.551l-2.229-4.459-1.044,1.566c-.186.278-.498.445-.832.445H2v3c0,2.757,2.243,5,5,5h10c2.757,0,5-2.243,5-5v-8.515c0-.163-.013-.324-.024-.485Z"/>
           </svg>
             <span class="hidden sm:inline">Laporan</span>
@@ -136,7 +136,7 @@
         
           <div id="master-report-dropdown" 
           class="dropdown-menu mt-1 ml-4 space-y-1 
-          {{ request()->is('report/obat*') || request()->is('report/siswa*') || request()->is('report/kunjungan*') ? '' : 'hidden' }}">
+          {{ request()->is('report/obat*') || request()->is('report/siswa*') || request()->is('report/kunjungan*') || request()->is('report/guru*') ? '' : 'hidden' }}">
            <a href="/report/kunjungan" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
             {{ request()->is('report/kunjungan*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
             <svg class="w-4 h-4 {{ request()->is('report/kunjungan*') ? 'text-yellow-500' : 'text-gray-600' }}" fill="currentColor" viewBox="0 0 24 24">
@@ -158,6 +158,13 @@
             </svg>
             <span>Laporan Obat</span>
           </a>
+          <a href="/report/guru" class="flex items-center gap-3 text-sm font-medium px-3 py-2 rounded-lg transition-colors
+            {{ request()->is('report/guru*') ? 'text-yellow-600 bg-yellow-50' : 'text-gray-600 hover:text-yellow-600 hover:bg-gray-50' }}">
+            <svg class="w-4 h-4 {{ request()->is('report/guru*') ? 'text-yellow-500' : 'text-gray-600' }}" fill="currentColor" viewBox="0 0 24 24">
+              <path d="m14,23c0,.552-.448,1-1,1H1c-.552,0-1-.448-1-1,0-3.866,3.134-7,7-7s7,3.134,7,7ZM7,6c-2.209,0-4,1.791-4,4s1.791,4,4,4,4-1.791,4-4-1.791-4-4-4Zm17-1v8c0,2.761-2.239,5-5,5h-4.526c-.945-1.406-2.275-2.533-3.839-3.227,1.437-1.096,2.365-2.826,2.365-4.773,0-3.314-2.686-6-6-6-1.084,0-2.102.288-2.979.791.112-2.658,2.294-4.791,4.979-4.791h10c2.761,0,5,2.239,5,5Zm-4,10c0-.553-.448-1-1-1h-3.5c-.552,0-1,.447-1,1s.448,1,1,1h3.5c.552,0,1-.447,1-1Z"/>
+            </svg>
+            <span>Laporan Guru</span>
+          </a>
         </div>
       </div>
      
@@ -170,7 +177,7 @@
     <div class="w-full">
       <!-- User Info -->
       <div class="flex items-center gap-3 w-full p-3 rounded-lg bg-gray-50 mb-3">
-        <img src="../../assets/user.png" alt="User" class="w-10 h-10 rounded-full flex-shrink-0" />
+        <img src="../../../../assets/user.png" alt="User" class="w-10 h-10 rounded-full flex-shrink-0" />
         <div class="hidden sm:block flex-1 min-w-0">
           <p class="text-sm font-medium truncate">{{ Auth::user()->name }}</p>
           <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>

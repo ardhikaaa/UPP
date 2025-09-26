@@ -31,6 +31,20 @@
                                 <option value="tahunan" {{ ($filterType ?? '') == 'tahunan' ? 'selected' : '' }}>Tahunan</option>
                             </select>
                         </div>
+                        <div class="col-span-1">
+                            <label for="unit_id" class="block text-sm font-medium text-[#142143] mb-2">
+                                Unit
+                            </label>
+                            <select name="unit_id" id="unit_id" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-[#0072BC] focus:ring-[#0072BC]">
+                                <option value="">Semua Unit</option>
+                                @php
+                                    $units = \App\Models\Unit::orderBy('unit')->get();
+                                @endphp
+                                @foreach($units as $u)
+                                    <option value="{{ $u->id }}" {{ ($unitId ?? '') == $u->id ? 'selected' : '' }}>{{ $u->unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         
                         <div class="col-span-1" id="tanggal-input" style="{{ ($filterType ?? '') == 'harian' ? '' : 'display: none;' }}">
                             <label for="tanggal" class="block text-sm font-medium text-[#142143] mb-2">

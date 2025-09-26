@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kunjungan;
+use App\Models\Unit;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -16,6 +17,7 @@ class ReportKunjunganController extends Controller
         $bulan = $request->bulan ?? now()->month;
         $tahun = $request->tahun ?? now()->year;
         $tahun = max(2000, min(2100, (int)$tahun));
+        $unitId = $request->unit_id; // optional
 
         $query = Kunjungan::withTrashed()->with(['rombel.unit', 'rombel.kelas', 'rombel.siswa', 'obats', 'guru']);
 
@@ -38,6 +40,17 @@ class ReportKunjunganController extends Controller
             default:
                 $title = "Laporan Semua Data Kunjungan";
                 break;
+        }
+
+        // Filter per Unit (melalui relasi rombel)
+        if (!empty($unitId)) {
+            $query->whereHas('rombel', function($q) use ($unitId) {
+                $q->where('unit_id', $unitId);
+            });
+            $unit = Unit::find($unitId);
+            if ($unit) {
+                $title .= " - Unit " . $unit->unit;
+            }
         }
 
         // Ambil semua data kunjungan (tanpa pagination)
