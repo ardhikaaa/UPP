@@ -48,7 +48,7 @@ class KunjunganController extends Controller
             });
         }
         
-        $kunjungan = $query->orderBy('created_at', 'desc')->paginate(10);
+        $kunjungan = $query->orderBy('created_at', 'desc')->paginate(50);
         
         // Append search parameter to pagination links
         $kunjungan->appends($request->query());

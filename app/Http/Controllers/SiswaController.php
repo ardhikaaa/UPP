@@ -28,7 +28,7 @@ class SiswaController extends Controller
             });
         }
         
-        $siswa = $query->orderBy('created_at', 'desc')->paginate(10);
+        $siswa = $query->orderBy('created_at', 'desc')->paginate(50);
         
         // Append search parameter to pagination links
         $siswa->appends($request->query());

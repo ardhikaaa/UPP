@@ -22,7 +22,7 @@ class KelasController extends Controller
             });
         }
         
-        $kelas = $query->orderBy('created_at', 'desc')->paginate(10);
+        $kelas = $query->orderBy('created_at', 'desc')->paginate(50);
         
         // Append search parameter to pagination links
         $kelas->appends($request->query());

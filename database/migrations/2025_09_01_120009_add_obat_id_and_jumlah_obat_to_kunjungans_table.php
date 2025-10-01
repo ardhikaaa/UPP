@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('kunjungans', function (Blueprint $table) {
-            $table->integer('jumlah_obat')->nullable()->after('guru_id');
-        });
+        // Add column only if it does not already exist (fresh installs already have it)
+        if (!Schema::hasColumn('kunjungans', 'jumlah_obat')) {
+            Schema::table('kunjungans', function (Blueprint $table) {
+                $table->integer('jumlah_obat')->nullable()->after('guru_id');
+            });
+        }
     }
 
     /**
@@ -21,8 +24,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('kunjungans', function (Blueprint $table) {
-            $table->dropColumn(['jumlah_obat']);
-        });
+        // Drop column only if it exists
+        if (Schema::hasColumn('kunjungans', 'jumlah_obat')) {
+            Schema::table('kunjungans', function (Blueprint $table) {
+                $table->dropColumn(['jumlah_obat']);
+            });
+        }
     }
 };

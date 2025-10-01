@@ -132,7 +132,7 @@ class ReportController extends Controller
         // Data utama dengan pagination (50 per halaman)
         $reportData = (clone $query)
             ->orderBy('created_at', 'desc')
-            ->paginate(10)
+            ->paginate(50)
             ->withQueryString();
 
         // Summary berdasarkan seluruh data hasil filter

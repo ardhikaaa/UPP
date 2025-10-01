@@ -26,7 +26,7 @@ class halaman_obatController extends Controller
             });
         }
         
-        $obat = $query->orderBy('created_at', 'desc')->paginate(10);
+        $obat = $query->orderBy('created_at', 'desc')->paginate(50);
         
         // Append search parameter to pagination links
         $obat->appends($request->query());

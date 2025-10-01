@@ -35,7 +35,7 @@ class RombelController extends Controller
             });
         }
         
-        $rombels = $query->orderBy('created_at', 'desc')->paginate(10);
+        $rombels = $query->orderBy('created_at', 'desc')->paginate(50);
         
         // Append search parameter to pagination links
         $rombels->appends($request->query());
