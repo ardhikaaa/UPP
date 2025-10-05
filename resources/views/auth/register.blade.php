@@ -11,7 +11,7 @@
             {{-- Full Name --}}
             <div class="mb-2">
                 <label class="block text-sm text-gray-800">Full Name</label>
-                <input type="text" name="name" value="{{ old('name') }}" placeholder="Doni Sulaiman" required
+                <input type="text" name="name" value="{{ old('name') }}" placeholder="John Doe" required
                        class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('name') border-red-500 @enderror"/>
                 @error('name')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -21,7 +21,7 @@
              {{-- Username --}}
             <div class="mb-2">
                 <label class="block text-sm text-gray-800">Username</label>
-                <input type="text" name="username" value="{{ old('username') }}" placeholder="Doni12643" required
+                <input type="text" name="username" value="{{ old('username') }}" placeholder="JohnDoe123" required
                        class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 @error('username') border-red-500 @enderror"/>
                 @error('username')
                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
