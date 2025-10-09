@@ -17,8 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/kunjungan_uks', [KunjunganController::class, 'index'])->name('kunjungan_uks');
-
+Route::get('/kunjungan_uks', [KunjunganController::class, 'index'])->middleware(['auth'])->name('kunjungan_uks');
 Route::resource('siswa', SiswaController::class)->middleware(['auth', 'verified']);
 Route::resource('guru', GuruController::class)->middleware(['auth', 'verified']);
 Route::resource('unit', UnitController::class)->middleware(['auth', 'verified']);
