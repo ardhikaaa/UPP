@@ -40,20 +40,38 @@ class ObatImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            // Buat obat baru
-            $obat = Obat::create([
-                'nama_obat' => $nama,
-                'jumlah'    => (int) $jumlah, // pastikan angka
-            ]);
+            // Cek apakah obat dengan nama yang sama sudah ada
+            $obat = Obat::where('nama_obat', $nama)->first();
 
-            // Catat history untuk obat yang baru dibuat
-            ObatHistory::create([
-                'obat_id'   => $obat->id,
-                'jumlah'    => $obat->jumlah,
-                'tipe'      => 'masuk',
-                'tanggal'   => now(),
-                'keterangan'=> 'Stok obat diimport dari Excel',
-            ]);
+            if ($obat) {
+                // Jika obat sudah ada, tambahkan jumlahnya
+                $jumlahLama = $obat->jumlah;
+                $obat->increment('jumlah', (int) $jumlah);
+                
+                // Catat history untuk penambahan stok
+                ObatHistory::create([
+                    'obat_id'   => $obat->id,
+                    'jumlah'    => (int) $jumlah,
+                    'tipe'      => 'masuk',
+                    'tanggal'   => now(),
+                    'keterangan'=> 'Stok obat ditambahkan dari import Excel (stok lama: ' . $jumlahLama . ', ditambah: ' . (int) $jumlah . ')',
+                ]);
+            } else {
+                // Jika obat belum ada, buat obat baru
+                $obat = Obat::create([
+                    'nama_obat' => $nama,
+                    'jumlah'    => (int) $jumlah, // pastikan angka
+                ]);
+
+                // Catat history untuk obat yang baru dibuat
+                ObatHistory::create([
+                    'obat_id'   => $obat->id,
+                    'jumlah'    => $obat->jumlah,
+                    'tipe'      => 'masuk',
+                    'tanggal'   => now(),
+                    'keterangan'=> 'Stok obat baru diimport dari Excel',
+                ]);
+            }
         }
     }
 }

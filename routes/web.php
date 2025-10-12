@@ -25,9 +25,7 @@ Route::resource('kelas', KelasController::class)->middleware(['auth', 'verified'
 Route::resource('obat', halaman_obatController::class)->middleware(['auth', 'verified']);
 Route::resource('rombel', RombelController::class)->middleware(['auth', 'verified']);
 Route::resource('kunjungan', KunjunganController::class)->middleware(['auth', 'verified']);
-// Route::get('/kunjungan_uks', function () {
-//     return view('kunjungan_uks');
-// });
+
 // routes/web.php
 Route::get('/get-kelas/{unit_id}', [KunjunganController::class, 'getKelas']);
 Route::get('/get-siswa/{unit_id}/{kelas_id}', [KunjunganController::class, 'getSiswa']);
@@ -55,13 +53,17 @@ Route::post('/guru/import', [GuruController::class, 'import'])->name('guru.impor
 Route::post('/rombel/import', [RombelController::class, 'import'])->name('rombel.import');
 Route::post('/siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
 
-
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::fallback(function () {
+    if (url()->previous() === url()->current()) {
+        return redirect('/');
+    }
+    return redirect()->back();
 });
 
 require __DIR__.'/auth.php';

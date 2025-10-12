@@ -19,6 +19,14 @@ class RombelImport implements ToCollection, WithHeadingRow
             $row = $row->toArray();
             $row = array_change_key_case($row, CASE_LOWER);
 
+            // Mapping fleksibel untuk NIS
+            $nis = $row['nis'] 
+                ?? $row['nomor_induk'] 
+                ?? $row['nomor induk'] 
+                ?? $row['no_induk'] 
+                ?? $row['no induk']
+                ?? null;
+
             // Mapping fleksibel untuk nama siswa
             $namaSiswa = $row['nama_siswa'] 
                       ?? $row['nama siswa'] 
@@ -26,6 +34,14 @@ class RombelImport implements ToCollection, WithHeadingRow
                       ?? $row['nama']
                       ?? $row['name']
                       ?? null;
+
+            // Mapping fleksibel untuk jenis kelamin
+            $jenisKelamin = $row['jenis_kelamin'] 
+                         ?? $row['jenis kelamin'] 
+                         ?? $row['gender'] 
+                         ?? $row['jk']
+                         ?? $row['kelamin']
+                         ?? null;
 
             // Mapping fleksibel untuk kelas
             $kelas = $row['kelas'] 
@@ -44,15 +60,75 @@ class RombelImport implements ToCollection, WithHeadingRow
                   ?? $row['section']
                   ?? null;
 
+            // Mapping fleksibel untuk no telp siswa
+            $noTelpSiswa = $row['no_telp_siswa'] 
+                        ?? $row['no telp siswa'] 
+                        ?? $row['telp_siswa'] 
+                        ?? $row['telp siswa'] 
+                        ?? $row['hp_siswa'] 
+                        ?? $row['hp siswa']
+                        ?? $row['telepon_siswa']
+                        ?? $row['telepon siswa']
+                        ?? null;
+
+            // Mapping fleksibel untuk no telp ortu
+            $noTelpOrtu = $row['no_telp_ortu'] 
+                       ?? $row['no telp ortu'] 
+                       ?? $row['telp_ortu'] 
+                       ?? $row['telp ortu'] 
+                       ?? $row['hp_ortu'] 
+                       ?? $row['hp ortu']
+                       ?? $row['telepon_ortu']
+                       ?? $row['telepon ortu']
+                       ?? $row['no_telp_orang_tua']
+                       ?? $row['no telp orang tua']
+                       ?? null;
+
             // Kalau nama siswa kosong, lewati baris ini
             if (!$namaSiswa) {
                 continue;
             }
 
-            // Cari siswa berdasarkan nama
-            $siswaModel = Siswa::where('nama_siswa', $namaSiswa)->first();
+            // Cari atau buat siswa
+            $siswaModel = null;
+            if ($nis) {
+                // Cari siswa berdasarkan NIS
+                $siswaModel = Siswa::where('nis', $nis)->first();
+            }
+            
             if (!$siswaModel) {
-                continue; // Lewati jika siswa tidak ditemukan
+                // Jika tidak ditemukan berdasarkan NIS, cari berdasarkan nama
+                $siswaModel = Siswa::where('nama_siswa', $namaSiswa)->first();
+            }
+
+            if (!$siswaModel) {
+                // Jika siswa tidak ditemukan, buat siswa baru
+                $siswaModel = Siswa::create([
+                    'nis' => $nis,
+                    'nama_siswa' => $namaSiswa,
+                    'jenis_kelamin' => $jenisKelamin,
+                    'no_telp_siswa' => $noTelpSiswa,
+                    'no_telp_ortu' => $noTelpOrtu,
+                ]);
+            } else {
+                // Jika siswa sudah ada, update data yang kosong (jika ada)
+                $updateData = [];
+                if (!$siswaModel->nis && $nis) {
+                    $updateData['nis'] = $nis;
+                }
+                if (!$siswaModel->jenis_kelamin && $jenisKelamin) {
+                    $updateData['jenis_kelamin'] = $jenisKelamin;
+                }
+                if (!$siswaModel->no_telp_siswa && $noTelpSiswa) {
+                    $updateData['no_telp_siswa'] = $noTelpSiswa;
+                }
+                if (!$siswaModel->no_telp_ortu && $noTelpOrtu) {
+                    $updateData['no_telp_ortu'] = $noTelpOrtu;
+                }
+                
+                if (!empty($updateData)) {
+                    $siswaModel->update($updateData);
+                }
             }
 
             // Cari atau buat unit
