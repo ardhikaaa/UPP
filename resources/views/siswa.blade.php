@@ -43,7 +43,7 @@
         </div>
 
         <!-- Import Section -->
-        <div class="p-6 border-b border-[#142143]/20">
+        {{-- <div class="p-6 border-b border-[#142143]/20">
             <form action="{{ route('siswa.import') }}" method="POST" enctype="multipart/form-data" class="flex flex-col sm:flex-row gap-4 items-end">
                 @csrf
                 <div class="flex-1">
@@ -68,7 +68,7 @@
                     </a>
                 </div>
             </form>
-        </div>
+        </div> --}}
 
         <!-- Table Section -->
         <div class="overflow-x-auto">

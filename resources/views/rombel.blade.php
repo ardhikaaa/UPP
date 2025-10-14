@@ -67,7 +67,7 @@
                     </a>
                 </div>
             </form>
-            <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            {{-- <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                 <div class="flex items-start">
                     <svg class="w-4 h-4 text-blue-600 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -77,7 +77,7 @@
                         <p class="mt-1">Pastikan data siswa sudah diisi terlebih dahulu sebelum melakukan import rombel. Siswa yang akan di-import harus sudah terdaftar di sistem.</p>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
         
 
